@@ -1,0 +1,149 @@
+{
+  "user": "模拟用户·小李",
+  "generated_at": "2026-03-04T11:57:18.612350+00:00",
+  "summary": "╔══════════════════════════════════════════╗\n║     币安用户成长全栈Agent — 今日报告       ║\n╚══════════════════════════════════════════╝\n\n👤 用户：模拟用户·小李\n📅 生成时间：2026-03-04 11:57 UTC\n\n🪞 【风险镜子】\n交易者类型：未知\n综合评级：N/A\n致命弱点：暂无明显弱点\n优势：继续积累\n\n🗺️ 【收益地图】\n当前收益率：0% APY\n最优收益率：0% APY\n每年多赚：+$0 USDT（同样的钱）\n\n📊 【合约复盘】\n合约健康评分：C — 需改进\n最高频错误：入场时机差（插针止损）（39.3%的亏损）\n\n🎓 【今日苏格拉底训练】\n情景：BTC刚刚突破前高，你的仓位显示盈利15%。此时市场情绪极度贪婪，各大KOL纷纷喊10万。...\n思考题：你现在最想做什么？为什么？\n\n══════════════════════════════════════════\nBuilt with OpenClaw | #AIBinance",
+  "square_post": "用AI给自己的币安账户做了个全面体检 🔍\n\n🪞 镜子照出来：我是「未知」\n主要问题：整体还不错\n\n🗺️ 收益地图：我的钱一直白放着\n同样0U，配置一下每年可以多赚$0\n\n📊 合约复盘：最大问题是入场时机差（插针止损）\n\n🎓 今日训练题：\n你现在最想做什么？为什么？\n\n这个AI成长系统真的很有用，不是给你信号，是帮你认清自己\nBuilt with OpenClaw 🦞 #AIBinance",
+  "mirror": {
+    "personality_type": "过度交易型",
+    "personality_icon": "⚡",
+    "personality_desc": "交易频率极高，手续费吃掉大量收益",
+    "fatal_weakness": "闲不住，把交易当娱乐，忽视手续费成本",
+    "patterns": {
+      "total_trades": 30,
+      "win_rate": 30.0,
+      "avg_profit": 10.44,
+      "avg_loss": -15.27,
+      "profit_loss_ratio": 0.68,
+      "chasing_ratio": 46.7,
+      "stop_loss_hit_ratio": 46.7,
+      "total_commission_bnb": 56.7917,
+      "avg_hold_hours": 36.8,
+      "top_symbol": "ETHUSDT",
+      "high_frequency": true
+    },
+    "suggestions": [
+      "⚠️ 你有明显追涨倾向，建议设置'冷静期'——有想法先等1小时再操作",
+      "⚠️ 胜率低于45%，先减少交易频率，只做最确定的机会",
+      "💡 手续费消耗较大，持有BNB可以享受25%折扣"
+    ],
+    "score": 22
+  },
+  "yield_map": {
+    "capital_assumed": 1000,
+    "yield_map": [
+      {
+        "option": "BTC DCA定投",
+        "apy": 29.9,
+        "annual_yield": 299.0,
+        "liquidity": "随时可终止",
+        "risk": "中高（市场波动）",
+        "skill": "binance-dca"
+      },
+      {
+        "option": "Launchpool: SampleProject A",
+        "apy": 22.0,
+        "annual_yield": 18.33,
+        "liquidity": "截止 2026-03-15",
+        "risk": "中（需质押BNB）",
+        "skill": "binance-hunter"
+      },
+      {
+        "option": "定期理财 90天 (USDT Locked)",
+        "apy": 9.97,
+        "annual_yield": 99.7,
+        "liquidity": "锁定90天",
+        "risk": "低",
+        "skill": "binance-pro-cn"
+      },
+      {
+        "option": "活期理财 (USDT Flexible)",
+        "apy": 3.7,
+        "annual_yield": 37.0,
+        "liquidity": "随时可取",
+        "risk": "极低",
+        "skill": "binance-pro-cn"
+      },
+      {
+        "option": "BNB Vault",
+        "apy": 2.9,
+        "annual_yield": 29.0,
+        "liquidity": "灵活",
+        "risk": "低（需持有BNB）",
+        "skill": "binance-pro-cn"
+      }
+    ],
+    "best_option": {
+      "option": "BTC DCA定投",
+      "apy": 29.9,
+      "annual_yield": 299.0,
+      "liquidity": "随时可终止",
+      "risk": "中高（市场波动）",
+      "skill": "binance-dca"
+    },
+    "recommendation": "当前最优：BTC DCA定投，预计年化 29.9%，每千USDT年收益约 $299.0",
+    "launchpool_active": [
+      {
+        "project": "SampleProject A",
+        "stakeAsset": "BNB",
+        "estimatedApy": 22.0,
+        "endDate": "2026-03-15",
+        "status": "active",
+        "totalStaked": "17413749 BNB"
+      },
+      {
+        "project": "SampleProject B",
+        "stakeAsset": "FDUSD",
+        "estimatedApy": 20.0,
+        "endDate": "2026-03-20",
+        "status": "active",
+        "totalStaked": "351559901 FDUSD"
+      }
+    ],
+    "dca_insight": "DCA在震荡市场中平均优于持有约12-18%"
+  },
+  "coach": {
+    "total_trades": 47,
+    "losing_trades": 28,
+    "winning_trades": 19,
+    "total_loss_usdt": -11625,
+    "top_error_patterns": [
+      {
+        "pattern": "入场时机差（插针止损）",
+        "count": 11,
+        "percentage": 39.3
+      },
+      {
+        "pattern": "方向判断错误",
+        "count": 8,
+        "percentage": 28.6
+      },
+      {
+        "pattern": "止损设置太近",
+        "count": 4,
+        "percentage": 14.3
+      }
+    ],
+    "health_score": "C — 需改进",
+    "weekly_report": {
+      "summary": "本周 28 笔亏损，最高频错误：入场时机差（插针止损）（11次）",
+      "key_insight": "找到高频错误是改变的第一步",
+      "action": "专注解决这一个问题，其他暂时忽略",
+      "square_post": "今天用AI复盘了我的合约记录，发现最大问题是：入场时机差（插针止损）\n这一个错误贡献了我大部分亏损\n下周专注改变这一点 #AIBinance #合约复盘"
+    },
+    "generated_at": "2026-03-04T11:57:18.612310"
+  },
+  "socrates": {
+    "today_scenario": "BTC刚刚突破前高，你的仓位显示盈利15%。此时市场情绪极度贪婪，各大KOL纷纷喊10万。",
+    "core_question": "你现在最想做什么？为什么？",
+    "follow_up_questions": [
+      "如果你选择继续持有，你的止盈在哪里？依据是什么？",
+      "如果你选择加仓，这笔加仓的止损在哪里？",
+      "贪婪指数极度贪婪时，历史上发生了什么？"
+    ],
+    "insight": "突破前高时往往是散户最兴奋的时刻，也是主力最容易分发的时刻。你的决策是被情绪驱动，还是被计划驱动？",
+    "weakness_targeted": "",
+    "instructions": "先认真思考，写下你的答案。不要直接看insight。",
+    "training_tip": "每天一题，7天后你看市场的方式会不同",
+    "generated_at": "2026-03-04T11:57:18.612322"
+  }
+}

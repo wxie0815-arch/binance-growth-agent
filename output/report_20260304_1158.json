@@ -1,0 +1,234 @@
+{
+  "user": "模拟用户·小李",
+  "generated_at": "2026-03-04T11:58:37.905794+00:00",
+  "summary": "╔══════════════════════════════════════════╗\n║     币安用户成长全栈Agent — 今日报告       ║\n╚══════════════════════════════════════════╝\n\n👤 用户：模拟用户·小李\n📅 生成时间：2026-03-04 11:58 UTC\n\n🪞 【风险镜子】\n交易者类型：过度交易型\n综合评级：26\n致命弱点：⚠️ 你有明显追涨倾向，建议设置'冷静期'——有想法先等1小时再操作 | ⚠️ 胜率低于45%，先减少交易频率，只做最确定的机会 | 💡 手续费消耗较大，持有BNB可以享受25%折扣\n优势：交易频率极高，手续费吃掉大量收益\n\n🗺️ 【收益地图】\n当前收益率：0% APY\n最优收益率：0% APY\n每年多赚：+$0 USDT（同样的钱）\n\n📊 【合约复盘】\n合约健康评分：🔴 需要大幅改进\n最高频错误：方向判断错误（4次）\n\n🎓 【今日苏格拉底训练】\n情景：你用了10倍杠杆开了一笔合约，持仓占你总资金的50%。行情正在往你预期的方向走，但波动很大。...\n思考题：你觉得这笔仓位的风险合理吗？\n\n══════════════════════════════════════════\nBuilt with OpenClaw | #AIBinance",
+  "square_post": "用AI给自己的币安账户做了个全面体检 🔍\n\n🪞 镜子照出来：我是「过度交易型」\n主要问题：⚠️ 你有明显追涨倾向，建议设置'冷静期'——有想法先等1小时再操作\n\n🗺️ 收益地图：我的钱一直白放着\n同样0U，配置一下每年可以多赚$0\n\n📊 合约复盘：最大问题是方向判断错误\n\n🎓 今日训练题：\n你觉得这笔仓位的风险合理吗？\n\n这个AI成长系统真的很有用，不是给你信号，是帮你认清自己\nBuilt with OpenClaw 🦞 #AIBinance",
+  "mirror": {
+    "personality_type": "过度交易型",
+    "personality_icon": "⚡",
+    "personality_desc": "交易频率极高，手续费吃掉大量收益",
+    "fatal_weakness": "闲不住，把交易当娱乐，忽视手续费成本",
+    "patterns": {
+      "total_trades": 30,
+      "win_rate": 33.3,
+      "avg_profit": 10.06,
+      "avg_loss": -12.3,
+      "profit_loss_ratio": 0.82,
+      "chasing_ratio": 50.0,
+      "stop_loss_hit_ratio": 46.7,
+      "total_commission_bnb": 59.1545,
+      "avg_hold_hours": 32.0,
+      "top_symbol": "BNBUSDT",
+      "high_frequency": true
+    },
+    "suggestions": [
+      "⚠️ 你有明显追涨倾向，建议设置'冷静期'——有想法先等1小时再操作",
+      "⚠️ 胜率低于45%，先减少交易频率，只做最确定的机会",
+      "💡 手续费消耗较大，持有BNB可以享受25%折扣"
+    ],
+    "score": 26
+  },
+  "yield_map": {
+    "capital_assumed": 1000,
+    "yield_map": [
+      {
+        "option": "BTC DCA定投",
+        "apy": 46.9,
+        "annual_yield": 469.0,
+        "liquidity": "随时可终止",
+        "risk": "中高（市场波动）",
+        "skill": "binance-dca"
+      },
+      {
+        "option": "Launchpool: SampleProject A",
+        "apy": 26.4,
+        "annual_yield": 22.0,
+        "liquidity": "截止 2026-03-15",
+        "risk": "中（需质押BNB）",
+        "skill": "binance-hunter"
+      },
+      {
+        "option": "定期理财 90天 (USDT Locked)",
+        "apy": 8.01,
+        "annual_yield": 80.1,
+        "liquidity": "锁定90天",
+        "risk": "低",
+        "skill": "binance-pro-cn"
+      },
+      {
+        "option": "活期理财 (USDT Flexible)",
+        "apy": 3.65,
+        "annual_yield": 36.5,
+        "liquidity": "随时可取",
+        "risk": "极低",
+        "skill": "binance-pro-cn"
+      },
+      {
+        "option": "BNB Vault",
+        "apy": 3.23,
+        "annual_yield": 32.3,
+        "liquidity": "灵活",
+        "risk": "低（需持有BNB）",
+        "skill": "binance-pro-cn"
+      }
+    ],
+    "best_option": {
+      "option": "BTC DCA定投",
+      "apy": 46.9,
+      "annual_yield": 469.0,
+      "liquidity": "随时可终止",
+      "risk": "中高（市场波动）",
+      "skill": "binance-dca"
+    },
+    "recommendation": "当前最优：BTC DCA定投，预计年化 46.9%，每千USDT年收益约 $469.0",
+    "launchpool_active": [
+      {
+        "project": "SampleProject A",
+        "stakeAsset": "BNB",
+        "estimatedApy": 26.4,
+        "endDate": "2026-03-15",
+        "status": "active",
+        "totalStaked": "17565886 BNB"
+      },
+      {
+        "project": "SampleProject B",
+        "stakeAsset": "FDUSD",
+        "estimatedApy": 16.6,
+        "endDate": "2026-03-20",
+        "status": "active",
+        "totalStaked": "278597058 FDUSD"
+      }
+    ],
+    "dca_insight": "DCA在震荡市场中平均优于持有约12-18%"
+  },
+  "coach": {
+    "analysis": {
+      "total_trades": 20,
+      "losing_trades": 12,
+      "win_rate": 40.0,
+      "total_pnl": -1736.68,
+      "total_loss": -2880.47,
+      "total_profit": 1143.79,
+      "top_errors": [
+        [
+          "direction_wrong",
+          4
+        ],
+        [
+          "position_too_heavy",
+          3
+        ],
+        [
+          "no_stop_loss",
+          3
+        ]
+      ],
+      "vs_spot_pnl": -2108.52,
+      "vs_spot_better": false
+    },
+    "top_error_patterns": [
+      {
+        "error": "方向判断错误",
+        "count": 4,
+        "desc": "趋势判断失误，做多时遇到下跌或做空时遇到上涨",
+        "fix": "加强趋势分析，至少看3个时间周期确认方向再入场"
+      },
+      {
+        "error": "仓位过重",
+        "count": 3,
+        "desc": "单笔仓位过大，微小波动就造成巨大亏损",
+        "fix": "单笔仓位不超过总资金的5%，用凯利公式计算最优仓位"
+      },
+      {
+        "error": "不设止损死扛",
+        "count": 3,
+        "desc": "没有止损计划，亏损后靠等待解套，越套越深",
+        "fix": "任何仓位开仓同时设好止损，这是铁律"
+      }
+    ],
+    "health_score": 36,
+    "health_verdict": "🔴 需要大幅改进",
+    "weekly_summary": "本周20笔合约，胜率40.0%，净盈亏$-1736.68，跑输现货持有",
+    "recent_trades": [
+      {
+        "symbol": "BNBUSDT",
+        "side": "SHORT",
+        "entry_price": 622.0,
+        "exit_price": 634.04,
+        "leverage": 5,
+        "pnl_usdt": 193.64,
+        "pnl_pct": 19.36,
+        "duration_hours": 32,
+        "error_type": null,
+        "time": "2026-03-04T11:58:37.905701+00:00",
+        "spot_hold_pnl": 67.65
+      },
+      {
+        "symbol": "BNBUSDT",
+        "side": "LONG",
+        "entry_price": 625.63,
+        "exit_price": 621.01,
+        "leverage": 5,
+        "pnl_usdt": -73.83,
+        "pnl_pct": -7.38,
+        "duration_hours": 14,
+        "error_type": "position_too_heavy",
+        "time": "2026-03-04T11:58:37.905707+00:00",
+        "spot_hold_pnl": -34.86
+      },
+      {
+        "symbol": "BNBUSDT",
+        "side": "LONG",
+        "entry_price": 614.08,
+        "exit_price": 608.12,
+        "leverage": 10,
+        "pnl_usdt": -97.02,
+        "pnl_pct": -9.7,
+        "duration_hours": 44,
+        "error_type": "stop_too_tight",
+        "time": "2026-03-04T11:58:37.905712+00:00",
+        "spot_hold_pnl": -35.59
+      },
+      {
+        "symbol": "BTCUSDT",
+        "side": "LONG",
+        "entry_price": 68991.62,
+        "exit_price": 69018.38,
+        "leverage": 20,
+        "pnl_usdt": 3.88,
+        "pnl_pct": 0.39,
+        "duration_hours": 12,
+        "error_type": null,
+        "time": "2026-03-04T11:58:37.905717+00:00",
+        "spot_hold_pnl": 68.89
+      },
+      {
+        "symbol": "ETHUSDT",
+        "side": "LONG",
+        "entry_price": 3185.44,
+        "exit_price": 3084.57,
+        "leverage": 20,
+        "pnl_usdt": -316.66,
+        "pnl_pct": -31.67,
+        "duration_hours": 32,
+        "error_type": "stop_too_tight",
+        "time": "2026-03-04T11:58:37.905722+00:00",
+        "spot_hold_pnl": 82.08
+      }
+    ]
+  },
+  "socrates": {
+    "today_scenario": "你用了10倍杠杆开了一笔合约，持仓占你总资金的50%。行情正在往你预期的方向走，但波动很大。",
+    "core_question": "你觉得这笔仓位的风险合理吗？",
+    "follow_up_questions": [
+      "如果这笔仓位爆仓，对你的总资产影响是多少？",
+      "你是否有能力在任何情况下承受这个损失？",
+      "赢了你会怎么想？输了你会怎么想？两种情绪是否对称？"
+    ],
+    "insight": "仓位管理不是保守，是生存。活着才能等到好机会。每次all-in都是在赌自己不犯错，但市场会让每个人都犯错。",
+    "weakness_targeted": "",
+    "instructions": "先认真思考，写下你的答案。不要直接看insight。",
+    "training_tip": "每天一题，7天后你看市场的方式会不同",
+    "generated_at": "2026-03-04T11:58:37.905763"
+  }
+}

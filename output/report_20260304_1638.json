@@ -1,0 +1,277 @@
+{
+  "generated_at": "2026-03-04T16:38:17.622380+00:00",
+  "overall_score": 30,
+  "grade": "D",
+  "summary": "📊 我的币安人生 · 今日报告\n──────────────────────────────\n🪞 交易者人格：⚡ 过度交易型\n   致命弱点：闲不住，把交易当娱乐，忽视手续费成本\n🗺️  收益地图：最优选项 BTC DCA定投\n   APY 44.8% | 年收益约 $448.0/千USDT\n📊 合约健康：🔴 需要大幅改进 30/100\n   本周20笔合约，胜率25.0%，净盈亏$-2833.8，跑输现货持有\n🎓 今日训练：手痒过度交易\n   第9笔交易，你的开仓理由是什么？\n──────────────────────────────\n🏆 综合成长评分：30/100 (D级)\n💪 继续加油，你的币安人生正在改变",
+  "square_post": "AI帮我照了一面镜子，我看到了真实的自己\n\n用了「我的币安人生」AI分析了过去3个月的交易记录\n\n结论让我有点沉默：\n\n我是【过度交易型】\n\n闲不住，把交易当娱乐，忽视手续费成本\n\n合约健康评分：30/100 🔴 需要大幅改进\n\n最高频的错误我自己都知道，但就是改不掉\n现在AI帮我盯着，每天复盘，每天一道思考题\n\n这是第1天，14天后再来看看有没有变化\n\n你也来测测你是什么交易者？\n\n#AIBinance #我的币安人生 #币安广场 #交易成长",
+  "modules": {
+    "mirror": {
+      "personality_type": "过度交易型",
+      "personality_icon": "⚡",
+      "personality_desc": "交易频率极高，手续费吃掉大量收益",
+      "fatal_weakness": "闲不住，把交易当娱乐，忽视手续费成本",
+      "patterns": {
+        "total_trades": 30,
+        "win_rate": 33.3,
+        "avg_profit": 11.78,
+        "avg_loss": -17.33,
+        "profit_loss_ratio": 0.68,
+        "chasing_ratio": 33.3,
+        "stop_loss_hit_ratio": 43.3,
+        "total_commission_bnb": 33.7107,
+        "avg_hold_hours": 39.6,
+        "top_symbol": "DOGEUSDT",
+        "high_frequency": true
+      },
+      "suggestions": [
+        "⚠️ 胜率低于45%，先减少交易频率，只做最确定的机会",
+        "💡 手续费消耗较大，持有BNB可以享受25%折扣"
+      ],
+      "score": 30
+    },
+    "yield": {
+      "capital_assumed": 1000,
+      "yield_map": [
+        {
+          "option": "BTC DCA定投",
+          "apy": 44.8,
+          "annual_yield": 448.0,
+          "liquidity": "随时可终止",
+          "risk": "中高（市场波动）",
+          "skill": "binance-dca"
+        },
+        {
+          "option": "Launchpool: SampleProject A",
+          "apy": 25.7,
+          "annual_yield": 21.42,
+          "liquidity": "截止 2026-03-15",
+          "risk": "中（需质押BNB）",
+          "skill": "binance-hunter"
+        },
+        {
+          "option": "定期理财 90天 (USDT Locked)",
+          "apy": 8.37,
+          "annual_yield": 83.7,
+          "liquidity": "锁定90天",
+          "risk": "低",
+          "skill": "binance-pro-cn"
+        },
+        {
+          "option": "活期理财 (USDT Flexible)",
+          "apy": 4.51,
+          "annual_yield": 45.1,
+          "liquidity": "随时可取",
+          "risk": "极低",
+          "skill": "binance-pro-cn"
+        },
+        {
+          "option": "BNB Vault",
+          "apy": 4.3,
+          "annual_yield": 43.0,
+          "liquidity": "灵活",
+          "risk": "低（需持有BNB）",
+          "skill": "binance-pro-cn"
+        }
+      ],
+      "best_option": {
+        "option": "BTC DCA定投",
+        "apy": 44.8,
+        "annual_yield": 448.0,
+        "liquidity": "随时可终止",
+        "risk": "中高（市场波动）",
+        "skill": "binance-dca"
+      },
+      "recommendation": "当前最优：BTC DCA定投，预计年化 44.8%，每千USDT年收益约 $448.0",
+      "launchpool_active": [
+        {
+          "project": "SampleProject A",
+          "stakeAsset": "BNB",
+          "estimatedApy": 25.7,
+          "endDate": "2026-03-15",
+          "status": "active",
+          "totalStaked": "13687314 BNB"
+        },
+        {
+          "project": "SampleProject B",
+          "stakeAsset": "FDUSD",
+          "estimatedApy": 11.1,
+          "endDate": "2026-03-20",
+          "status": "active",
+          "totalStaked": "149602017 FDUSD"
+        }
+      ],
+      "dca_insight": "DCA在震荡市场中平均优于持有约12-18%"
+    },
+    "coach": {
+      "analysis": {
+        "total_trades": 20,
+        "losing_trades": 15,
+        "win_rate": 25.0,
+        "total_pnl": -2833.8,
+        "total_loss": -3664.43,
+        "total_profit": 830.63,
+        "top_errors": [
+          [
+            "stop_too_tight",
+            6
+          ],
+          [
+            "direction_wrong",
+            3
+          ],
+          [
+            "no_stop_loss",
+            2
+          ]
+        ],
+        "vs_spot_pnl": -3489.5,
+        "vs_spot_better": false
+      },
+      "top_error_patterns": [
+        {
+          "error": "止损设置太近",
+          "count": 6,
+          "desc": "止损位在正常波动范围内，频繁被市场正常波动触发",
+          "fix": "把止损设在关键支撑/阻力位外，而非固定百分比"
+        },
+        {
+          "error": "方向判断错误",
+          "count": 3,
+          "desc": "趋势判断失误，做多时遇到下跌或做空时遇到上涨",
+          "fix": "加强趋势分析，至少看3个时间周期确认方向再入场"
+        },
+        {
+          "error": "不设止损死扛",
+          "count": 2,
+          "desc": "没有止损计划，亏损后靠等待解套，越套越深",
+          "fix": "任何仓位开仓同时设好止损，这是铁律"
+        }
+      ],
+      "health_score": 30,
+      "health_verdict": "🔴 需要大幅改进",
+      "weekly_summary": "本周20笔合约，胜率25.0%，净盈亏$-2833.8，跑输现货持有",
+      "recent_trades": [
+        {
+          "symbol": "BNBUSDT",
+          "side": "SHORT",
+          "entry_price": 588.65,
+          "exit_price": 595.27,
+          "leverage": 5,
+          "pnl_usdt": 112.53,
+          "pnl_pct": 11.25,
+          "duration_hours": 29,
+          "error_type": null,
+          "time": "2026-03-04T16:38:17.622309+00:00",
+          "spot_hold_pnl": -29.8
+        },
+        {
+          "symbol": "BTCUSDT",
+          "side": "LONG",
+          "entry_price": 74121.43,
+          "exit_price": 75517.34,
+          "leverage": 10,
+          "pnl_usdt": 188.33,
+          "pnl_pct": 18.83,
+          "duration_hours": 42,
+          "error_type": null,
+          "time": "2026-03-04T16:38:17.622314+00:00",
+          "spot_hold_pnl": 70.48
+        },
+        {
+          "symbol": "ETHUSDT",
+          "side": "SHORT",
+          "entry_price": 3262.9,
+          "exit_price": 3148.58,
+          "leverage": 10,
+          "pnl_usdt": -350.35,
+          "pnl_pct": -35.04,
+          "duration_hours": 5,
+          "error_type": "stop_too_tight",
+          "time": "2026-03-04T16:38:17.622319+00:00",
+          "spot_hold_pnl": 35.84
+        },
+        {
+          "symbol": "ETHUSDT",
+          "side": "LONG",
+          "entry_price": 3312.11,
+          "exit_price": 3258.95,
+          "leverage": 20,
+          "pnl_usdt": -160.5,
+          "pnl_pct": -16.05,
+          "duration_hours": 3,
+          "error_type": "direction_wrong",
+          "time": "2026-03-04T16:38:17.622324+00:00",
+          "spot_hold_pnl": 57.0
+        },
+        {
+          "symbol": "BNBUSDT",
+          "side": "SHORT",
+          "entry_price": 596.22,
+          "exit_price": 566.87,
+          "leverage": 20,
+          "pnl_usdt": -492.15,
+          "pnl_pct": -49.21,
+          "duration_hours": 34,
+          "error_type": "stop_too_tight",
+          "time": "2026-03-04T16:38:17.622329+00:00",
+          "spot_hold_pnl": 91.61
+        }
+      ]
+    },
+    "socrates": {
+      "personality_type": "过度交易型",
+      "scenario": "今天已经交易了8次，账户微亏，但你发现了一个新信号想再开一笔",
+      "market_context": "今日手续费已消耗$23，净亏损$15 | 今日BNB +9.8% | 当前BTCUSDT信号:SHORT(弱)",
+      "main_question": "第9笔交易，你的开仓理由是什么？",
+      "followup_questions": [
+        "如果今天一笔都不交易，结果会更好吗？",
+        "手续费成本你算进去了吗？",
+        "这个信号和前8次有什么本质不同？"
+      ],
+      "common_trap": "手痒过度交易",
+      "hint": "💡 先回答主问题，AI会根据你的回答追问",
+      "format": "今日训练",
+      "market_snapshot": {
+        "rankings": [
+          {
+            "rank": 1,
+            "symbol": "BTC",
+            "change_24h": 9.14,
+            "trend": "上涨"
+          },
+          {
+            "rank": 2,
+            "symbol": "ETH",
+            "change_24h": -2.89,
+            "trend": "下跌"
+          },
+          {
+            "rank": 3,
+            "symbol": "BNB",
+            "change_24h": 9.83,
+            "trend": "上涨"
+          },
+          {
+            "rank": 4,
+            "symbol": "SOL",
+            "change_24h": 5.97,
+            "trend": "上涨"
+          },
+          {
+            "rank": 5,
+            "symbol": "DOGE",
+            "change_24h": -1.58,
+            "trend": "下跌"
+          }
+        ],
+        "signal": {
+          "symbol": "BTCUSDT",
+          "direction": "SHORT",
+          "strength": "弱",
+          "rsi": 38.6,
+          "trend": "上升趋势"
+        }
+      }
+    }
+  }
+}

@@ -1,89 +1,118 @@
 #!/usr/bin/env python3
 """
-报告生成器 — 汇总四大模块输出，生成完整成长报告
+报告生成器
+整合四大子Agent结果，生成完整成长报告
 """
 
 from datetime import datetime, timezone
 
 
 def generate_report(user_data: dict, results: dict) -> dict:
+    """整合所有子Agent结果生成完整报告"""
+
+    now = datetime.now(timezone.utc)
     mirror = results.get('mirror', {})
-    yield_map = results.get('yield', {})
+    yield_r = results.get('yield', {})
     coach = results.get('coach', {})
     socrates = results.get('socrates', {})
 
-    name = user_data.get('name', '用户')
-    # 兼容两种字段名
-    trader_type = mirror.get('personality_type') or mirror.get('trader_type', '未知')
-    grade = mirror.get('score', mirror.get('overall_grade', 'N/A'))
-    weaknesses = mirror.get('suggestions', mirror.get('weaknesses', []))
-    strengths = [mirror.get('personality_desc', '')] if mirror.get('personality_desc') else mirror.get('strengths', [])
+    # 综合成长评分
+    scores = []
+    if mirror:
+        scores.append(mirror.get('score', 50))
+    if coach:
+        scores.append(coach.get('health_score', 50))
+    overall_score = round(sum(scores) / len(scores)) if scores else 50
 
-    yield_gap = yield_map.get('yield_gap', 0)
-    optimal_apy = yield_map.get('optimal_apy', 0)
-    current_apy = yield_map.get('current_apy', 0)
+    grade = "S" if overall_score >= 85 else \
+            "A" if overall_score >= 70 else \
+            "B" if overall_score >= 55 else \
+            "C" if overall_score >= 40 else "D"
 
-    health = coach.get('health_verdict', coach.get('health_score', 'N/A'))
-    top_errors = coach.get('top_error_patterns', [])
+    # 每日Telegram推送摘要
+    summary_lines = [
+        f"📊 我的币安人生 · 今日报告",
+        f"{'─' * 30}",
+    ]
 
-    today_q = socrates.get('today_scenario', '')
-    core_q = socrates.get('core_question', '')
+    if mirror:
+        summary_lines += [
+            f"🪞 交易者人格：{mirror.get('personality_icon','')} {mirror.get('personality_type','')}",
+            f"   致命弱点：{mirror.get('fatal_weakness','')}",
+        ]
 
-    summary = f"""
-╔══════════════════════════════════════════╗
-║     币安用户成长全栈Agent — 今日报告       ║
-╚══════════════════════════════════════════╝
+    if yield_r:
+        best = yield_r.get('best_option', {})
+        summary_lines += [
+            f"🗺️  收益地图：最优选项 {best.get('option','')}",
+            f"   APY {best.get('apy',0)}% | 年收益约 ${best.get('annual_yield',0)}/千USDT",
+        ]
 
-👤 用户：{name}
-📅 生成时间：{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}
+    if coach:
+        summary_lines += [
+            f"📊 合约健康：{coach.get('health_verdict','')} {coach.get('health_score',0)}/100",
+            f"   {coach.get('weekly_summary','')}",
+        ]
 
-🪞 【风险镜子】
-交易者类型：{trader_type}
-综合评级：{grade}
-致命弱点：{' | '.join(weaknesses) if weaknesses else '暂无明显弱点'}
-优势：{' | '.join(strengths) if strengths else '继续积累'}
+    if socrates:
+        summary_lines += [
+            f"🎓 今日训练：{socrates.get('common_trap','')}",
+            f"   {socrates.get('main_question','')}",
+        ]
 
-🗺️ 【收益地图】
-当前收益率：{current_apy}% APY
-最优收益率：{optimal_apy}% APY
-每年多赚：+${yield_gap:,.0f} USDT（同样的钱）
+    summary_lines += [
+        f"{'─' * 30}",
+        f"🏆 综合成长评分：{overall_score}/100 ({grade}级)",
+        f"💪 继续加油，你的币安人生正在改变",
+    ]
 
-📊 【合约复盘】
-合约健康评分：{health}
-最高频错误：{top_errors[0]['error'] if top_errors else 'N/A'}（{top_errors[0].get('count', 0) if top_errors else 0}次）
+    summary = "\n".join(summary_lines)
 
-🎓 【今日苏格拉底训练】
-情景：{today_q[:80]}...
-思考题：{core_q}
-
-══════════════════════════════════════════
-Built with OpenClaw | #AIBinance
-""".strip()
-
-    # 广场发布文本
-    square_post = f"""用AI给自己的币安账户做了个全面体检 🔍
-
-🪞 镜子照出来：我是「{trader_type}」
-主要问题：{weaknesses[0] if weaknesses else '整体还不错'}
-
-🗺️ 收益地图：我的钱一直白放着
-同样{yield_map.get('total_assets_usdt', 0):,.0f}U，配置一下每年可以多赚${yield_gap:,.0f}
-
-📊 合约复盘：最大问题是{top_errors[0]['error'] if top_errors else '仓位管理'}
-
-🎓 今日训练题：
-{core_q}
-
-这个AI成长系统真的很有用，不是给你信号，是帮你认清自己
-Built with OpenClaw 🦞 #AIBinance"""
+    # 广场文章草稿（7日挑战）
+    square_post = _generate_square_post(mirror, coach, now)
 
     return {
-        "user": name,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": now.isoformat(),
+        "overall_score": overall_score,
+        "grade": grade,
         "summary": summary,
         "square_post": square_post,
-        "mirror": mirror,
-        "yield_map": yield_map,
-        "coach": coach,
-        "socrates": socrates
+        "modules": {
+            "mirror": mirror,
+            "yield": yield_r,
+            "coach": coach,
+            "socrates": socrates,
+        }
     }
+
+
+def _generate_square_post(mirror: dict, coach: dict, now: datetime) -> str:
+    """生成广场7日挑战文章草稿"""
+
+    personality = mirror.get('personality_type', '未知')
+    weakness = mirror.get('fatal_weakness', '')
+    health = coach.get('health_verdict', '')
+    score = coach.get('health_score', 0)
+
+    post = f"""AI帮我照了一面镜子，我看到了真实的自己
+
+用了「我的币安人生」AI分析了过去3个月的交易记录
+
+结论让我有点沉默：
+
+我是【{personality}】
+
+{weakness}
+
+合约健康评分：{score}/100 {health}
+
+最高频的错误我自己都知道，但就是改不掉
+现在AI帮我盯着，每天复盘，每天一道思考题
+
+这是第1天，14天后再来看看有没有变化
+
+你也来测测你是什么交易者？
+
+#AIBinance #我的币安人生 #币安广场 #交易成长"""
+
+    return post

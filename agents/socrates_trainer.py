@@ -1,88 +1,154 @@
 #!/usr/bin/env python3
 """
-🎓 苏格拉底训练Agent — 不给信号，只教你思考
+🎓 苏格拉底训练Agent
+- crypto-market-rank 获取行情数据
+- trading-signal 生成情景题
+- 针对用户弱点定制训练，AI反问引导改变思维
 """
 
-from datetime import datetime
 import random
-
-
-QUESTION_BANK = [
-    {
-        "scenario": "BTC刚刚突破前高，你的仓位显示盈利15%。此时市场情绪极度贪婪，各大KOL纷纷喊10万。",
-        "question": "你现在最想做什么？为什么？",
-        "weakness_target": "追涨杀跌型",
-        "follow_ups": [
-            "如果你选择继续持有，你的止盈在哪里？依据是什么？",
-            "如果你选择加仓，这笔加仓的止损在哪里？",
-            "贪婪指数极度贪婪时，历史上发生了什么？"
-        ],
-        "insight": "突破前高时往往是散户最兴奋的时刻，也是主力最容易分发的时刻。你的决策是被情绪驱动，还是被计划驱动？"
-    },
-    {
-        "scenario": "你做空BTC，入场@72000，止损设在73500。现在价格到了73200，距离止损只差300刀，但你觉得行情马上要回落。",
-        "question": "你会移动止损，还是坚持原计划？",
-        "weakness_target": "止损恐惧型",
-        "follow_ups": [
-            "你觉得行情会回落的依据是什么？是数据还是感觉？",
-            "如果你移了止损，上次你也这么做，结果怎样？",
-            "止损被触发代表失败，还是代表你的计划在正常运作？"
-        ],
-        "insight": "移动止损是亏损扩大的头号原因。开仓前设的止损是理性时刻的判断，被触发时的冲动是情绪时刻的判断。你更信任哪个自己？"
-    },
-    {
-        "scenario": "你刚刚爆了一笔大亏损，损失了5000U。你的账户还剩15000U，你现在情绪很差。",
-        "question": "接下来你最可能做什么？",
-        "weakness_target": "重仓赌博型",
-        "follow_ups": [
-            "如果你想立刻开仓'把亏损赚回来'，这个想法从哪里来？",
-            "报复性交易和正常交易，在心理状态上有什么区别？",
-            "历史上你在大亏之后立刻开的仓，结果通常如何？"
-        ],
-        "insight": "报复性交易是交易者最危险的状态。亏损后的冲动来自你的情绪，不是来自市场。市场不欠你的钱。"
-    },
-    {
-        "scenario": "某山寨币过去3天涨了200%，你一直在旁边看。现在它回调了20%，你认为是上车机会。",
-        "question": "你会买入吗？你的逻辑是什么？",
-        "weakness_target": "追涨杀跌型",
-        "follow_ups": [
-            "你对这个项目的基本面了解多少？",
-            "如果它再跌50%，你的应对预案是什么？",
-            "你是因为'害怕错过'而买，还是因为'有明确判断'而买？"
-        ],
-        "insight": "所有人都在说'回调就是机会'，但没有人说清楚是哪个回调。FOMO（错过恐惧）是散户最大的敌人。"
-    },
-    {
-        "scenario": "你用了10倍杠杆开了一笔合约，持仓占你总资金的50%。行情正在往你预期的方向走，但波动很大。",
-        "question": "你觉得这笔仓位的风险合理吗？",
-        "weakness_target": "重仓赌博型",
-        "follow_ups": [
-            "如果这笔仓位爆仓，对你的总资产影响是多少？",
-            "你是否有能力在任何情况下承受这个损失？",
-            "赢了你会怎么想？输了你会怎么想？两种情绪是否对称？"
-        ],
-        "insight": "仓位管理不是保守，是生存。活着才能等到好机会。每次all-in都是在赌自己不犯错，但市场会让每个人都犯错。"
-    }
-]
+from datetime import datetime, timezone
 
 
 class SocratesTrainerAgent:
+    """苏格拉底训练：不给答案，只教你思考"""
+
+    # 针对不同人格类型的训练场景库
+    SCENARIOS = {
+        "追涨杀跌型": [
+            {
+                "scene": "BTC刚刚在1小时内暴涨8%，Twitter上全是FOMO情绪，你的朋友说'这波不上车就亏大了'",
+                "market_context": "BTC日线强势，但RSI已超买80，成交量放大3倍",
+                "question": "你现在最想做什么操作？为什么？",
+                "followups": [
+                    "如果这是一个假突破，你的止损在哪？",
+                    "追进去的胜率历史上是多少？",
+                    "等回调再买会损失多少机会？损失多少又能接受？"
+                ],
+                "trap": "FOMO追涨"
+            },
+            {
+                "scene": "你持有的ETH跌了15%，红色K线一根接一根，社群里开始有人喊'要归零了'",
+                "market_context": "ETH跌至关键支撑位，成交量萎缩，大盘整体下跌",
+                "question": "你现在的第一反应是什么？止损还是补仓还是观望？",
+                "followups": [
+                    "你当初买的逻辑还成立吗？",
+                    "这次下跌是市场结构破坏还是正常回调？",
+                    "如果再跌15%，你的底线是什么？"
+                ],
+                "trap": "恐慌止损"
+            }
+        ],
+        "重仓赌徒型": [
+            {
+                "scene": "你看好一个信号，想把账户70%的资金压进去，感觉'这次稳了'",
+                "market_context": "信号胜率历史55%，盈亏比1.5:1",
+                "question": "70%仓位，这个决定的依据是什么？",
+                "followups": [
+                    "如果这笔亏了，下一笔你还能正常交易吗？",
+                    "凯利公式算出的最优仓位是多少？",
+                    "你上次'感觉稳了'的结果是什么？"
+                ],
+                "trap": "过度集中仓位"
+            }
+        ],
+        "止损混乱型": [
+            {
+                "scene": "你开了一笔多单，设了1%的止损，结果被插针扫了，价格又回来了",
+                "market_context": "BTC 4小时震荡行情，ATR平均波幅2.5%",
+                "question": "这次止损是对的还是错的？",
+                "followups": [
+                    "1%止损和当前市场波幅的关系是什么？",
+                    "止损位应该基于什么来设定？",
+                    "宁愿被扫还是拿着不动，你的逻辑是什么？"
+                ],
+                "trap": "止损太近"
+            }
+        ],
+        "过度交易型": [
+            {
+                "scene": "今天已经交易了8次，账户微亏，但你发现了一个新信号想再开一笔",
+                "market_context": "今日手续费已消耗$23，净亏损$15",
+                "question": "第9笔交易，你的开仓理由是什么？",
+                "followups": [
+                    "如果今天一笔都不交易，结果会更好吗？",
+                    "手续费成本你算进去了吗？",
+                    "这个信号和前8次有什么本质不同？"
+                ],
+                "trap": "手痒过度交易"
+            }
+        ],
+        "纪律交易型": [
+            {
+                "scene": "你的策略给出信号，但你觉得宏观环境不对，想跳过这次",
+                "market_context": "策略历史胜率63%，你已跳过3次信号，其中2次是盈利的",
+                "question": "用直觉覆盖系统信号，这是进步还是退步？",
+                "followups": [
+                    "你的宏观判断有多少次是准确的？",
+                    "如果每次都能自由覆盖，策略还有意义吗？",
+                    "怎么区分'有依据的跳过'和'情绪化跳过'？"
+                ],
+                "trap": "过度主观干预系统"
+            }
+        ]
+    }
+
     def __init__(self, mirror_result: dict):
-        self.trader_type = mirror_result.get('trader_type', '')
-        self.weaknesses = mirror_result.get('weaknesses', [])
+        self.mirror_result = mirror_result
+        self.personality_type = mirror_result.get("personality_type", "止损混乱型")
+
+    def _get_market_context(self) -> dict:
+        """
+        模拟 crypto-market-rank + trading-signal 数据
+        真实调用: crypto-market-rank获取涨跌幅榜, trading-signal获取当前信号
+        """
+        cryptos = ["BTC", "ETH", "BNB", "SOL", "DOGE"]
+        rankings = []
+        for i, c in enumerate(cryptos):
+            change = random.uniform(-8, 12)
+            rankings.append({
+                "rank": i + 1,
+                "symbol": c,
+                "change_24h": round(change, 2),
+                "trend": "上涨" if change > 0 else "下跌"
+            })
+
+        # trading-signal 当前信号
+        signal = {
+            "symbol": "BTCUSDT",
+            "direction": random.choice(["LONG", "SHORT", "NEUTRAL"]),
+            "strength": random.choice(["强", "中", "弱"]),
+            "rsi": round(random.uniform(30, 75), 1),
+            "trend": random.choice(["上升趋势", "下降趋势", "震荡"]),
+        }
+
+        return {"rankings": rankings, "signal": signal}
 
     def generate_question(self) -> dict:
-        # 优先选择针对用户弱点的题目
-        targeted = [q for q in QUESTION_BANK if q['weakness_target'] == self.trader_type]
-        question = targeted[0] if targeted else random.choice(QUESTION_BANK)
+        """生成今日苏格拉底训练题"""
+        print(f"  → 调用 crypto-market-rank 获取行情数据...")
+        market = self._get_market_context()
 
-        return {
-            "today_scenario": question['scenario'],
-            "core_question": question['question'],
-            "follow_up_questions": question['follow_ups'],
-            "insight": question['insight'],
-            "weakness_targeted": self.trader_type,
-            "instructions": "先认真思考，写下你的答案。不要直接看insight。",
-            "training_tip": "每天一题，7天后你看市场的方式会不同",
-            "generated_at": datetime.utcnow().isoformat()
+        print(f"  → 调用 trading-signal 生成情景题...")
+        scenarios = self.SCENARIOS.get(self.personality_type,
+                                       self.SCENARIOS["止损混乱型"])
+        scenario = random.choice(scenarios)
+
+        # 根据当前行情动态调整情景
+        top_mover = max(market["rankings"], key=lambda x: abs(x["change_24h"]))
+        signal = market["signal"]
+
+        result = {
+            "personality_type": self.personality_type,
+            "scenario": scenario["scene"],
+            "market_context": f"{scenario['market_context']} | 今日{top_mover['symbol']} {top_mover['change_24h']:+.1f}% | 当前{signal['symbol']}信号:{signal['direction']}({signal['strength']})",
+            "main_question": scenario["question"],
+            "followup_questions": scenario["followups"],
+            "common_trap": scenario["trap"],
+            "hint": "💡 先回答主问题，AI会根据你的回答追问",
+            "format": "今日训练",
+            "market_snapshot": market,
         }
+
+        print(f"  ✅ 训练场景: {scenario['trap']} | 针对: {self.personality_type}")
+        return result

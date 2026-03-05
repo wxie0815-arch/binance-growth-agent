@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
 📊 合约复盘教练Agent
-- binance-pro 读取合约交易历史
+- binance-pro-cn 读取合约交易历史（真实 or mock）
 - binance-spot-trader 现货对比
 - 逐笔拆解亏损，识别高频错误模式
+- 集成模拟盘 PaperTrader：开仓 / 平仓 / PnL 统计
 """
 
 import random
 from datetime import datetime, timezone
+from utils.paper_trader import PaperTrader
 
 
 class FuturesCoachAgent:
@@ -43,6 +45,7 @@ class FuturesCoachAgent:
 
     def __init__(self, user_data: dict):
         self.user_data = user_data
+        self.paper = PaperTrader()  # 模拟盘实例
 
     def _mock_futures_history(self) -> list:
         """
@@ -146,6 +149,13 @@ class FuturesCoachAgent:
         print(f"  ✅ 合约健康分: {health_score}/100 {verdict}")
         print(f"  ✅ 高频错误: {error_report[0]['error'] if error_report else '暂无'}")
 
+        # ── 模拟盘 PnL 统计 ──────────────────────────────────────
+        paper_summary = self.paper.get_pnl_summary()
+        paper_positions = self.paper.get_positions()
+        print(f"  ✅ 模拟盘余额: ${paper_summary['balance']:,.2f} | "
+              f"收益率: {paper_summary['return_pct']:+.2f}% | "
+              f"持仓: {len(paper_positions)} 笔")
+
         return {
             "analysis": analysis,
             "top_error_patterns": error_report,
@@ -156,4 +166,32 @@ class FuturesCoachAgent:
                               f"净盈亏${analysis['total_pnl']}，"
                               f"{'跑赢' if analysis['vs_spot_better'] else '跑输'}现货持有",
             "recent_trades": trades[-5:],  # 最近5笔
+            "paper_trading": {
+                "balance": paper_summary["balance"],
+                "return_pct": paper_summary["return_pct"],
+                "total_pnl_usdt": paper_summary["total_pnl_usdt"],
+                "total_trades": paper_summary["total_trades"],
+                "win_rate": paper_summary["win_rate"],
+                "open_positions": len(paper_positions),
+            },
+        }
+
+    def paper_open(self, symbol: str, side: str, qty: float, price: float,
+                   leverage: int = 10, stop_loss: float = None,
+                   take_profit: float = None, note: str = None) -> dict:
+        """模拟盘开仓（供外部调用）"""
+        return self.paper.open_position(
+            symbol, side, qty, price, leverage, stop_loss, take_profit, note
+        )
+
+    def paper_close(self, pos_id: str, exit_price: float) -> dict:
+        """模拟盘平仓（供外部调用）"""
+        return self.paper.close_position(pos_id, exit_price)
+
+    def paper_status(self) -> dict:
+        """模拟盘状态汇总"""
+        return {
+            "summary": self.paper.get_pnl_summary(),
+            "positions": self.paper.get_positions(),
+            "orders": self.paper.get_order_history(10),
         }

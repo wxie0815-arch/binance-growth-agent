@@ -30,7 +30,7 @@ def run_full_analysis(mode="demo", api_key=None, api_secret=None,
     """
     print(f"\n{'🦞'*20}")
     print(f"  我的币安人生")
-    print(f"  Powered by OpenClaw · Power × XieXiu")
+    print(f"  Powered by OpenClaw · XieXiu × 芒果")
     print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M')} CST")
     print(f"{'🦞'*20}\n")
 

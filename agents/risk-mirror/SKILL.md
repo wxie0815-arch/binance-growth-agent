@@ -3,7 +3,7 @@ title: 风险镜子 - 交易者人格分析
 description: 分析用户的币安模拟盘交易历史，输出交易者人格报告：你是什么类型的交易者，你的致命弱点在哪里。
 metadata:
   version: "1.0"
-  author: Power
+  author: XieXiu
 license: MIT
 ---
 

@@ -6,7 +6,7 @@ description: |
   触发词：广场流量、热榜预测、流量密码、今天发什么、广场预言
 metadata:
   version: "1.0"
-  author: Power + XieXiu
+  author: XieXiu + 芒果
 license: MIT
 ---
 

@@ -7,7 +7,7 @@ description: |
   触发词：我的币安人生、交易分析、照镜子、成长报告、风险分析
 metadata:
   version: "1.0"
-  author: Power + XieXiu
+  author: XieXiu + 芒果
 license: MIT
 ---
 

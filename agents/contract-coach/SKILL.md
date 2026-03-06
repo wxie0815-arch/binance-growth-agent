@@ -3,7 +3,7 @@ title: 合约复盘教练 (Contract Coach)
 description: 分析用户的合约交易记录，逐笔拆解亏损原因，识别高频错误模式，每周生成健康报告。触发词：复盘、为什么亏、拆解亏损、合约复盘
 metadata:
   version: "1.0"
-  author: XieXiu + Power
+  author: XieXiu + 芒果
 license: MIT
 ---
 

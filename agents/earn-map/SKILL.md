@@ -3,7 +3,7 @@ title: 收益地图 - 币安生态收益优化
 description: 实时对比币安Earn/Vault/Launchpool/活期理财等产品收益率，根据用户持仓给出最优资产配置方案。
 metadata:
   version: "1.0"
-  author: Power
+  author: XieXiu
 license: MIT
 ---
 

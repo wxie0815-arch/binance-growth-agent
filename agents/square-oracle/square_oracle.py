@@ -186,7 +186,7 @@ def generate_square_oracle_report():
     print(f"  4. 配图>纯文字，视频>配图，数据截图最具说服力")
     print(f"  5. 发布后前30分钟主动互动评论区，触发广场推荐算法")
     print(f"\n{'='*45}")
-    print(f"🦞 Power · 广场流量预言机 v1.0")
+    print(f"🖤 XieXiu · 广场流量预言机 v1.0")
 
 if __name__ == "__main__":
     generate_square_oracle_report()

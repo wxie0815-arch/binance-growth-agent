@@ -95,7 +95,7 @@ python3 main/orchestrator.py --mode live --api-key YOUR_KEY --api-secret YOUR_SE
 
 | Agent | 负责模块 | 运行环境 |
 |-------|---------|---------|
-| ⚡ Power | 主Agent + 风险镜子 + 收益地图 + 7日挑战 | 13.112.183.211 |
+| 🥭 芒果 | 主Agent + 风险镜子 + 收益地图 + 7日挑战 | 18.179.6.146 |
 | 🖤 邪修 | 合约复盘教练 + 苏格拉底训练 + 宏观分析 | 13.229.72.206 |
 
 为 [@wuxie149](https://x.com/wuxie149) 构建 · 币安广场博主 & 交易员

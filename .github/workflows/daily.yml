@@ -1,0 +1,33 @@
+name: 每日成长报告推送
+
+on:
+  schedule:
+    - cron: '0 14 * * *'  # 北京时间22:00 = UTC 14:00
+  workflow_dispatch:       # 手动触发
+
+jobs:
+  daily-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 设置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 运行每日推送
+        env:
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_SECRET: ${{ secrets.BINANCE_SECRET }}
+        run: python3 daily_push.py
+
+  weekly-challenge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 7日挑战内容生成
+        run: python3 docs/day2_article.py

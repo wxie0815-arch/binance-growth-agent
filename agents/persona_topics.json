@@ -1,0 +1,62 @@
+{
+  "过度交易型": [
+    {"topic": "我今天又手痒了，但忍住了", "angle": "情绪克制的真实故事", "tags": "#币安交易 #情绪管理"},
+    {"topic": "一天交易20次是什么体验", "angle": "过度交易的代价复盘", "tags": "#交易复盘 #AIBinance"},
+    {"topic": "我把止损设好然后关掉了屏幕", "angle": "系统替代情绪的实践", "tags": "#风控 #交易习惯"},
+    {"topic": "为什么我总在最高点买入", "angle": "FOMO行为模式分析", "tags": "#交易心理 #BTC"},
+    {"topic": "AI帮我发现：我90%的亏损在同一个时间段", "angle": "数据揭示规律", "tags": "#AIBinance #数据复盘"},
+    {"topic": "设置每日交易上限后，我的胜率提高了", "angle": "纪律建立的效果", "tags": "#交易纪律 #币安"},
+    {"topic": "冲动交易vs计划交易，收益差了多少", "angle": "对比数据说话", "tags": "#AIBinance #交易策略"},
+    {"topic": "我删掉了行情App通知，结果发生了什么", "angle": "减少噪音的实验", "tags": "#交易习惯 #BTC"},
+    {"topic": "交易24小时冷静期：试了7天效果如何", "angle": "行为实验复盘", "tags": "#币安 #交易心理"},
+    {"topic": "AI告诉我：我是典型的过度交易型，然后呢", "angle": "人格识别后的改变计划", "tags": "#AIBinance #成长"}
+  ],
+  "保守守护型": [
+    {"topic": "把闲置USDT放活期一年，我多赚了多少", "angle": "Earn收益实测报告", "tags": "#币安Earn #被动收益"},
+    {"topic": "BNB Vault vs 定期理财，我选了哪个", "angle": "产品对比决策过程", "tags": "#BNB #Earn"},
+    {"topic": "Launchpool质押的真实体验：收益和坑", "angle": "亲历者客观评测", "tags": "#Launchpool #AIBinance"},
+    {"topic": "我的仓位从不超过总资产30%，这五年", "angle": "保守策略的长期回报", "tags": "#仓位管理 #价值投资"},
+    {"topic": "熊市我在做什么：存Earn等春天", "angle": "周期应对策略", "tags": "#币安Earn #熊市"},
+    {"topic": "定投BTC 12个月，今天看结果", "angle": "DCA策略实盘数据", "tags": "#定投 #BTC #AIBinance"},
+    {"topic": "AI帮我算：如果我去年改保守策略，现在多赚多少", "angle": "策略回测假设", "tags": "#AIBinance #Earn"},
+    {"topic": "被爆仓三次之后，我变成了保守型", "angle": "痛苦教训转化为策略", "tags": "#风控 #交易心理"},
+    {"topic": "不追热点，只持BNB/BTC，两年收益", "angle": "集中持仓实证", "tags": "#BNB #BTC #长线"},
+    {"topic": "收益地图：同样1000U放哪里最划算", "angle": "Earn产品横向对比", "tags": "#币安 #AIBinance #Earn"}
+  ],
+  "FOMO追涨型": [
+    {"topic": "我在最高点追进去了，然后……", "angle": "踩坑真实记录", "tags": "#FOMO #交易复盘"},
+    {"topic": "那个涨300%的币我看了三天没买，第四天买了", "angle": "FOMO心理解剖", "tags": "#山寨币 #交易心理"},
+    {"topic": "AI分析我的交易记录：95%的追涨都亏了", "angle": "数据戳破幻觉", "tags": "#AIBinance #FOMO"},
+    {"topic": "错过了10倍币？我来算算你真的错过了多少", "angle": "理性分析错失成本", "tags": "#BTC #交易心理"},
+    {"topic": "设置追涨冷静期30分钟：这一个月少亏了多少", "angle": "行为干预效果", "tags": "#AIBinance #风控"},
+    {"topic": "群里喊的币一定要等30分钟再看", "angle": "信息过滤策略", "tags": "#交易习惯 #币安"},
+    {"topic": "我的画像：在上涨50%时买入，下跌20%时卖出", "angle": "行为模式自白", "tags": "#FOMO #AIBinance"},
+    {"topic": "两个字救了我的本金：等待", "angle": "等待策略的价值", "tags": "#交易心理 #BTC"},
+    {"topic": "AI给我设置了追涨预警，触发就强制冷静", "angle": "技术辅助克制情绪", "tags": "#AIBinance #风控"},
+    {"topic": "错过这轮涨幅？下一轮怎么不错过", "angle": "前瞻策略建立", "tags": "#BTC #交易策略 #AIBinance"}
+  ],
+  "数据分析型": [
+    {"topic": "链上大户在买什么，我用数据说话", "angle": "链上数据解读", "tags": "#链上数据 #聪明钱 #AIBinance"},
+    {"topic": "BTC相关性分析：和黄金的关系变了吗", "angle": "宏观资产相关性", "tags": "#BTC #宏观 #数据"},
+    {"topic": "7个指标告诉我现在是顶部还是底部", "angle": "多维度市场判断", "tags": "#技术分析 #AIBinance"},
+    {"topic": "我用AI回测了这个策略，胜率是多少", "angle": "量化策略验证", "tags": "#量化 #AIBinance #BTC"},
+    {"topic": "恐惧贪婪指数低于20时买入的历史数据", "angle": "情绪指标策略回测", "tags": "#数据 #BTC #AIBinance"},
+    {"topic": "合约资金费率告诉我市场情绪：今天的数据", "angle": "衍生品数据解读", "tags": "#合约 #数据 #币安"},
+    {"topic": "AI帮我分析：我的盈利交易和亏损交易有什么不同", "angle": "个人交易数据挖掘", "tags": "#AIBinance #数据复盘"},
+    {"topic": "用历史数据算：每月几号买BTC最便宜", "angle": "时间序列分析", "tags": "#BTC #定投 #数据"},
+    {"topic": "地缘事件对BTC价格影响：量化分析", "angle": "地缘因子研究", "tags": "#宏观 #BTC #AIBinance"},
+    {"topic": "Launchpad中标率数据：什么持仓量胜算最高", "angle": "Launchpad策略优化", "tags": "#Launchpad #数据 #BNB"}
+  ],
+  "佛系持有型": [
+    {"topic": "持有BTC三年，我经历了什么", "angle": "穿越牛熊的心路历程", "tags": "#BTC #长线 #价值投资"},
+    {"topic": "跌50%我没卖，涨200%我也没卖：然后呢", "angle": "钻石手策略实证", "tags": "#BTC #持有 #AIBinance"},
+    {"topic": "我只看季度K线，你看1分钟K线", "angle": "时间维度的交易哲学", "tags": "#BTC #长线思维"},
+    {"topic": "别人追热点，我只做一件事：等", "angle": "耐心作为核心能力", "tags": "#价值投资 #BTC"},
+    {"topic": "定投的第200天：本金收益现在是多少", "angle": "长期定投实盘数据", "tags": "#定投 #BTC #AIBinance"},
+    {"topic": "我的持仓策略：买了就不看，一个季度开一次", "angle": "低频策略的优势", "tags": "#BTC #持有策略"},
+    {"topic": "周期思维：现在是哪个阶段，该做什么", "angle": "宏观周期判断框架", "tags": "#BTC #宏观 #AIBinance"},
+    {"topic": "AI告诉我：佛系持有型的最优Earn配置", "angle": "持有+收益双优化", "tags": "#AIBinance #Earn #BNB"},
+    {"topic": "不做交易也能赚钱：我的Earn+Launchpool组合", "angle": "被动收益最大化", "tags": "#Earn #Launchpool #币安"},
+    {"topic": "时间是最好的杠杆：复利计算给你看", "angle": "长期复利可视化", "tags": "#BTC #复利 #AIBinance"}
+  ]
+}

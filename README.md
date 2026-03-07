@@ -105,3 +105,25 @@ python3 main/orchestrator.py --mode live --api-key YOUR_KEY --api-secret YOUR_SE
 ## 📄 License
 
 MIT License · 参赛作品，欢迎 Fork & Star ⭐
+
+---
+
+## 🎯 核心差异化
+
+| 特点 | 说明 |
+|------|------|
+| 🤖 双Agent协作 | 邪修(分析层) + 芒果(输出层) 实时内部通信，全场唯一 |
+| 📊 5步成长闭环 | 照镜子→看地图→做复盘→练思维→7日挑战，形成完整成长体系 |
+| 🔮 广场流量预言机 | 预测今日热榜话题，AI选题助手 |
+| 🛡️ Demo模式 | 无需API Key即可完整体验，30秒上手 |
+| 🔗 官方Skills | 100% 调用币安7大官方技能 |
+
+## 📹 演示视频
+
+> 即将上传 — 展示完整5步流程 + 双Agent实时协作
+
+## 🏆 参赛信息
+
+- 比赛：[币安AI Agent创意大赛 #AIBinance](https://www.binance.com/zh-CN/square)
+- 作者：XieXiu × 芒果
+- GitHub：[wxie0815-arch/binance-growth-agent](https://github.com/wxie0815-arch/binance-growth-agent)

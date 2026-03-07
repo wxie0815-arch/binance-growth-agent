@@ -70,6 +70,13 @@ def get_stats():
 
 if __name__ == "__main__":
     init_db()
-    insert_demo_trades()
+    # 只在数据库为空时插入演示数据，避免重复
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT COUNT(*) FROM trades")
+    count = c.fetchone()[0]
+    conn.close()
+    if count == 0:
+        insert_demo_trades()
     stats = get_stats()
     print(f"📊 数据库统计: {json.dumps(stats, ensure_ascii=False)}")

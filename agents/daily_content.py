@@ -3,17 +3,52 @@
 每日广场内容运营 - 自动生成今日内容方案
 基于预言机热点 + 人格选题库 + 7日挑战计划
 """
-import json, random
+import json, random, os, requests
 from datetime import datetime, timezone
 
 # 今日是大赛Day4（2026-03-07）
 TODAY_CHALLENGE_DAY = 4  # 练思维（苏格拉底训练）
 
-ORACLE_HOT = [
-    {"topic": "BTC突破趋势分析", "score": 94, "tags": "#BTC #AIBinance"},
-    {"topic": "AI Agent实战分享", "score": 87, "tags": "#AIAgent #我的币安人生"},
-    {"topic": "地缘风险与加密市场", "score": 81, "tags": "#宏观 #BTC"},
-]
+# 从风险镜子结果推断人格类型（对应persona_topics.json）
+PERSONA_MAP = {
+    "aggressive": "过度交易型",
+    "conservative": "保守守护型",
+    "fomo": "FOMO追涨型",
+    "analytical": "数据分析型",
+    "hodler": "佛系持有型"
+}
+
+def get_persona_topics(trader_type="aggressive"):
+    """从persona_topics.json按人格类型获取选题"""
+    topics_path = os.path.join(os.path.dirname(__file__), "persona_topics.json")
+    try:
+        with open(topics_path) as f:
+            topics = json.load(f)
+        persona = PERSONA_MAP.get(trader_type, "过度交易型")
+        return topics.get(persona, [])
+    except:
+        return []
+
+def get_oracle_hot():
+    """从square_oracle获取实时热点"""
+    try:
+        import sys
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), "square-oracle"))
+        from square_oracle import get_binance_social_hype, get_trending_tokens
+        trending = get_trending_tokens()
+        if trending:
+            return [{"topic": t.get("symbol","BTC")+"热点分析", "score": 90-i*5, "tags": f"#{t.get('symbol','BTC')} #AIBinance"}
+                    for i, t in enumerate(trending[:3])]
+    except:
+        pass
+    # 降级默认
+    return [
+        {"topic": "BTC突破趋势分析", "score": 94, "tags": "#BTC #AIBinance"},
+        {"topic": "AI Agent实战分享", "score": 87, "tags": "#AIAgent #我的币安人生"},
+        {"topic": "地缘风险与加密市场", "score": 81, "tags": "#宏观 #BTC"},
+    ]
+
+ORACLE_HOT = get_oracle_hot()
 
 CHALLENGE_DAY4 = {
     "theme": "🎓 练思维",

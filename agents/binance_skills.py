@@ -67,28 +67,38 @@ def skill_get_spot_trades(symbol="BTCUSDT", limit=50):
 def skill_get_futures_trades(symbol="BTCUSDT", limit=20):
     """
     调用 binance-pro skill
-    接口: GET /fapi/v1/userTrades
+    接口1: GET /fapi/v1/income?incomeType=REALIZED_PNL  → 全品种真实已实现P&L
+    接口2: GET /fapi/v2/account → 各持仓杠杆倍数
     文档: SKILL.md - Futures section
     """
     api_key, secret = load_keys()
     if not api_key:
         return None, "no_key"
     try:
-        data = _get(
-            "https://fapi.binance.com/fapi/v1/userTrades",
-            {"symbol": symbol, "limit": limit},
+        # ── 1. 全量已实现P&L（不限symbol） ──────────────────
+        income_data = _get(
+            "https://fapi.binance.com/fapi/v1/income",
+            {"incomeType": "REALIZED_PNL", "limit": 100},
             api_key, secret
         )
+        # ── 2. 账户杠杆信息（symbol → leverage） ─────────────
+        acct = _get("https://fapi.binance.com/fapi/v2/account", {}, api_key, secret)
+        leverage_map = {}
+        for p in acct.get("positions", []):
+            leverage_map[p["symbol"]] = int(p.get("leverage", 1))
+
         trades = []
-        for t in data:
+        for t in income_data:
+            sym = t.get("symbol", "UNKNOWN")
             trades.append({
-                "symbol":   t["symbol"],
-                "side":     t["side"],
-                "price":    float(t["price"]),
-                "qty":      float(t["qty"]),
-                "pnl":      float(t.get("realizedPnl", 0)),
+                "symbol":   sym,
+                "side":     "UNKNOWN",
+                "price":    0.0,
+                "qty":      0.0,
+                "pnl":      float(t.get("income", 0)),
+                "leverage": leverage_map.get(sym, 1),
                 "time":     datetime.fromtimestamp(t["time"]/1000).strftime("%Y-%m-%d %H:%M"),
-                "source":   "binance-pro/fapi/userTrades"
+                "source":   "binance-pro/fapi/income+account"
             })
         return trades, "ok"
     except Exception as e:

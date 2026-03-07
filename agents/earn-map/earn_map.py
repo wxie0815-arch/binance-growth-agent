@@ -47,8 +47,30 @@ ALLOCATION_TEMPLATES = {
     ],
 }
 
-def generate_earn_map(trader_type="balanced", total_idle_usdt=1000):
+def generate_earn_map(trader_type="balanced", total_idle_usdt=1000, mode="demo"):
     """生成收益地图报告"""
+
+    live_products = None
+    data_note = "📊 演示数据"
+
+    if mode == "live":
+        # ── live模式：调用 binance-pro skill ──────────────────
+        import sys, os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+        from binance_skills import skill_get_earn_products
+        products, err = skill_get_earn_products()
+        if products:
+            # 将真实产品数据动态更新到EARN_PRODUCTS
+            for p in products:
+                key = f"live_{p['asset'].lower()}"
+                EARN_PRODUCTS[key] = {
+                    "name": p["name"], "apy": p["apy"],
+                    "liquidity": "活期", "risk": "低", "min": p["min"]
+                }
+            live_products = products
+            data_note = "🔐 真实数据（binance-pro skill / simple-earn）"
+        else:
+            data_note = f"⚠️ live模式失败({err})，已降级演示数据"
     
     template = ALLOCATION_TEMPLATES.get(trader_type, ALLOCATION_TEMPLATES["balanced"])
     

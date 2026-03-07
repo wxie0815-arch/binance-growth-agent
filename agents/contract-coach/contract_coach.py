@@ -47,6 +47,19 @@ def analyze_contract_trades(trades: list) -> dict:
     }
 
 def generate_coach_report(trades=None, mode="demo") -> str:
+    if mode == "live":
+        # ── live模式：调用 binance-pro skill ──────────────────
+        import sys, os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+        from binance_skills import skill_get_futures_trades
+        live_trades, err = skill_get_futures_trades("BTCUSDT", limit=20)
+        if live_trades:
+            trades = live_trades
+            data_note = "🔐 真实数据（binance-pro skill / fapi/userTrades）"
+        else:
+            data_note = f"⚠️ live失败({err})，降级演示"
+            mode = "demo"
+
     if mode == "demo" or not trades:
         trades = [
             {"symbol": "BTCUSDT", "pnl": 320,  "leverage": 10, "no_stoploss": False, "emotion_add": False},
@@ -55,6 +68,7 @@ def generate_coach_report(trades=None, mode="demo") -> str:
             {"symbol": "SOLUSDT", "pnl": 210,  "leverage": 10, "no_stoploss": False, "emotion_add": False},
             {"symbol": "BTCUSDT", "pnl": 540,  "leverage": 15, "no_stoploss": False, "emotion_add": False},
         ]
+        data_note = "📊 演示数据（模拟盘）"
 
     r = analyze_contract_trades(trades)
     worst = r["worst_trade"]

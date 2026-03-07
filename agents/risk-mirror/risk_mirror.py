@@ -151,16 +151,30 @@ def determine_type(spot_analysis, futures_analysis):
 
 def generate_report(mode="demo", api_key=None, api_secret=None):
     """生成完整人格分析报告"""
-    
-    if mode == "demo":
-        spot_trades = get_demo_spot_trades()
+
+    if mode == "live":
+        # ── live模式：调用 binance-pro skill ──────────────────
+        import sys, os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+        from binance_skills import skill_get_spot_trades, skill_get_futures_trades
+
+        spot_raw, err1 = skill_get_spot_trades("BTCUSDT", limit=50)
+        fut_raw, err2  = skill_get_futures_trades("BTCUSDT", limit=20)
+
+        if spot_raw is None:
+            # Key缺失或请求失败 → 降级demo
+            mode = "demo"
+            spot_trades   = get_demo_spot_trades()
+            futures_trades = get_demo_futures_trades()
+            data_note = f"⚠️ live模式失败({err1})，已降级演示数据"
+        else:
+            spot_trades   = spot_raw
+            futures_trades = fut_raw or []
+            data_note = "🔐 真实数据（binance-pro skill / 只读API）"
+    else:
+        spot_trades   = get_demo_spot_trades()
         futures_trades = get_demo_futures_trades()
         data_note = "📊 演示数据（模拟盘）"
-    else:
-        # 实盘模式（需要API Key）
-        spot_trades = get_real_spot_trades(api_key, api_secret)
-        futures_trades = []  # 合约需要单独接口
-        data_note = "🔐 真实数据（只读API）"
     
     spot = analyze_spot(spot_trades)
     futures = analyze_futures(futures_trades)

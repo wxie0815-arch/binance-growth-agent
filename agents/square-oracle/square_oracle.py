@@ -116,11 +116,11 @@ def predict_hot_topics(analysis, hotwords, smart_signals):
     ]
     return topics
 
+
 def generate_square_oracle_report():
     now_bj = datetime.now(timezone.utc)
     bj_str = f"{(now_bj.hour+8)%24:02d}:{now_bj.minute:02d} CST"
 
-    # ── 拉取三维数据（官方skill）──────────────────────────
     social_hype    = get_social_hype()
     trending       = get_trending_tokens()
     smart_signals  = get_smart_money_signals()
@@ -181,12 +181,45 @@ def generate_square_oracle_report():
     ]
     return "\n".join(lines)
 
+
+def humanize_content(text):
+    """
+    去AI味处理（humanizer-cn规则）
+    调用 skill: /home/ubuntu/.openclaw/workspace/skills/humanizer-cn/SKILL.md
+    """
+    import re
+    replacements = {
+        "值得注意的是": "说实话",
+        "综上所述": "反正就是",
+        "不难发现": "你会发现",
+        "让我们来看看": "",
+        "话不多说": "",
+        "欢迎关注": "",
+        "干货满满": "",
+        "建议收藏": "",
+        "赋能": "帮到",
+        "精准": "准",
+        "系统性": "",
+        "底层逻辑": "本质",
+        "大幅上涨": "涨了不少",
+        "大幅下跌": "跌得挺惨",
+        "显著增长": "涨了",
+    }
+    result = text
+    for old, new in replacements.items():
+        result = result.replace(old, new)
+    # 去掉连续空白行超过2行
+    result = re.sub(r'\n{3,}', '\n\n', result)
+    return result
+
+
 def generate_enhanced_report():
     """
     三层数据融合输出：
     Layer1: 官方Skill（crypto-market-rank / spot / trading-signal）
     Layer2: 6551增强（opennews + Twitter KOL）
     Layer3: 广场热点信号（@binancezh推文 + 话题分类）
+    + humanizer-cn 去AI味建议
     """
     # Layer1: 官方skill报告（不变）
     base_report = generate_square_oracle_report()
@@ -212,8 +245,6 @@ def generate_enhanced_report():
         from square_signals import build_square_signal_report, format_square_block
         sq_data = build_square_signal_report()
         sq_block = format_square_block(sq_data)
-
-        # 把广场Top话题融入今日选题建议
         if sq_data.get("topics"):
             top_topic = sq_data["topics"][0]["topic"]
             top_tags = " ".join([f"#{t}" for t, _ in sq_data.get("hashtags", [])[:3]])
@@ -221,7 +252,17 @@ def generate_enhanced_report():
     except Exception as e:
         sq_block = f"\n[广场热点层暂不可用: {e}]\n"
 
-    return base_report + "\n" + enh_block + "\n" + sq_block
+    # humanizer-cn 提示块
+    humanizer_tip = """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✍️ humanizer-cn 写作规则（发帖前必读）
+  ❌ 禁止：排比三段式 / 升华结尾 / 套话词汇
+  ✅ 要用：具体数字 | 时间锚点 | 停顿句 | 不完整句
+  ✅ 示例开头："今天 $BTC -3.8%，我盯着手机看了一会儿，没动。"
+  ✅ 示例结尾："反正今天没爆仓。够了。"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"""
+
+    return base_report + "\n" + enh_block + "\n" + sq_block + humanizer_tip
 
 
 if __name__ == "__main__":

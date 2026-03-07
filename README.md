@@ -137,3 +137,15 @@ MIT License · 参赛作品，欢迎 Fork & Star ⭐
 - 比赛：[币安AI Agent创意大赛 #AIBinance](https://www.binance.com/zh-CN/square)
 - 作者：XieXiu × 芒果
 - GitHub：[wxie0815-arch/binance-growth-agent](https://github.com/wxie0815-arch/binance-growth-agent)
+
+---
+
+## 📅 更新日志
+
+### 2026-03-07（今日更新）
+- ✅ **广场流量预言机 v3.0**：四层数据架构（行情+新闻+KOL+广场信号）
+- ✅ **文章自动生成模块**：每日10-15篇，必发 $BTC / $ETH / $XAU / $XAG
+- ✅ **humanizer-cn v3.0**：28模式AI写作检测（基于 brandonwise/humanizer v2.2）
+- ✅ **系统稳定性**：API故障转移v2.0 + ghost_api v3通信修复
+- ✅ **每日汇报**：北京22:05 CST自动发送Telegram日报
+- ✅ **仓库私有化**：项目代码改为私有保护

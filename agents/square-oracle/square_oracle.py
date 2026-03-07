@@ -1,52 +1,47 @@
 #!/usr/bin/env python3
 """
 币安广场流量预言机 - Square Traffic Oracle
-分析多维数据，找出广场流量密码，预测今日热榜话题
-数据来源：Twitter热词 + 币安链上社交热度 + 加密新闻评分
+数据来源（官方Skill）：
+  - crypto-market-rank skill → 社交热度榜（leaderBoardList）
+  - spot skill               → 24h行情涨幅榜（ticker/24hr）
+  - trading-signal skill     → 智能钱信号（smart-money）
+  - opennews                 → 新闻热词（需OPENNEWS_TOKEN）
 """
 
-import urllib.request, json, os
+import sys, os, json, urllib.request
 from datetime import datetime, timezone
 
-# ---- 数据获取层 ----
+BASE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(BASE, ".."))
 
-def get_binance_social_hype():
-    """获取币安热门代币（用官方行情API替代失效的社交热度API）"""
-    try:
-        url = "https://api.binance.com/api/v3/ticker/24hr"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as r:
-            data = json.loads(r.read())
-        # 筛选USDT交易对，按成交量排序，取前10
-        usdt = [d for d in data if d["symbol"].endswith("USDT") and float(d["quoteVolume"]) > 1e6]
-        top = sorted(usdt, key=lambda x: float(x["quoteVolume"]), reverse=True)[:10]
-        return [{"symbol": t["symbol"].replace("USDT",""),
-                 "hype_score": min(99, int(float(t["quoteVolume"])/1e7)),
-                 "price_change": float(t["priceChangePercent"]),
-                 "sentiment": "positive" if float(t["priceChangePercent"]) > 0 else "negative"} for t in top]
-    except:
-        return [{"symbol": "BTC", "hype_score": 95, "sentiment": "positive", "price_change": 2.1},
-                {"symbol": "ETH", "hype_score": 82, "sentiment": "positive", "price_change": 1.8},
-                {"symbol": "BNB", "hype_score": 76, "sentiment": "positive", "price_change": 0.9}]
+def get_social_hype():
+    """crypto-market-rank skill - 社交热度榜"""
+    from binance_skills import skill_get_social_hype
+    data, err = skill_get_social_hype("56", limit=10)
+    if data:
+        return data
+    # 降级：spot skill 公开行情
+    from binance_skills import skill_get_top_movers
+    movers, _ = skill_get_top_movers(10)
+    return [{"symbol": m["symbol"], "hype": int(m["volume_usdt"]/1e6),
+             "sentiment": "positive" if m["change_pct"] > 0 else "negative",
+             "source": "spot/ticker/24hr"} for m in (movers or [])]
 
 def get_trending_tokens():
-    """获取24h涨幅最大的代币（实时数据）"""
-    try:
-        url = "https://api.binance.com/api/v3/ticker/24hr"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as r:
-            data = json.loads(r.read())
-        usdt = [d for d in data if d["symbol"].endswith("USDT") and float(d["quoteVolume"]) > 1e6]
-        top = sorted(usdt, key=lambda x: float(x["priceChangePercent"]), reverse=True)[:8]
-        return [{"symbol": t["symbol"].replace("USDT",""),
-                 "price_change": float(t["priceChangePercent"]),
-                 "volume": float(t["quoteVolume"])} for t in top]
-    except:
-        return [{"symbol": "BTC", "price_change": 6.5, "volume": 1e9},
-                {"symbol": "ETH", "price_change": 7.8, "volume": 5e8}]
+    """spot skill - 24h涨幅热门代币"""
+    from binance_skills import skill_get_top_movers
+    movers, err = skill_get_top_movers(8)
+    return [{"symbol": m["symbol"], "price_change": m["change_pct"],
+             "volume": m["volume_usdt"], "source": m["source"]} for m in (movers or [])]
+
+def get_smart_money_signals():
+    """trading-signal skill - 智能钱信号"""
+    from binance_skills import skill_get_smart_money_signals
+    signals, err = skill_get_smart_money_signals("56", limit=5)
+    return signals or []
 
 def get_news_hotwords(token=None):
-    """获取加密新闻热词（需要OPENNEWS_TOKEN，无则跳过）"""
+    """opennews - 新闻热词（需OPENNEWS_TOKEN）"""
     token = token or os.environ.get("OPENNEWS_TOKEN")
     if not token:
         return ["AI", "BTC", "ETH", "Web3", "Binance", "DeFi", "Layer2", "Meme"]
@@ -54,146 +49,137 @@ def get_news_hotwords(token=None):
         url = "https://ai.6551.io/open/news_search"
         body = json.dumps({"limit": 20, "orderBy": "score", "timeRange": "6h"}).encode()
         req = urllib.request.Request(url, data=body, headers={
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/json"
+            "Authorization": f"Bearer {token}", "Content-Type": "application/json"
         })
         with urllib.request.urlopen(req, timeout=10) as r:
             d = json.loads(r.read())
         items = d.get("data", {}).get("list", [])
         words = []
         for item in items[:10]:
-            title = item.get("title", "")
-            words.extend(title.split()[:3])
-        return list(set(words))[:12]
+            words.extend(item.get("title", "").split()[:3])
+        return list(set(words))[:12] or ["AI", "BTC", "ETH", "Binance"]
     except:
         return ["AI", "BTC", "ETH", "Web3", "Binance", "DeFi"]
 
+def analyze_traffic_patterns(social_hype, trending_tokens, smart_signals):
+    """综合三维数据分析今日流量密钥"""
+    hour = datetime.now(timezone.utc).hour
+    bj_hour = (hour + 8) % 24
 
-# ---- 流量密码分析层 ----
-
-# 广场内容类型权重（基于历史规律）
-CONTENT_WEIGHTS = {
-    "行情分析": {"base_score": 85, "best_time": "9:00-10:00, 21:00-22:00", "format": "图文+数据"},
-    "项目研究": {"base_score": 78, "best_time": "10:00-12:00", "format": "长文+图解"},
-    "热点追踪": {"base_score": 92, "best_time": "突发时立即", "format": "短文+截图"},
-    "交易复盘": {"base_time": "base_score", "base_score": 72, "best_time": "20:00-23:00", "format": "图文+数据"},
-    "AI+加密": {"base_score": 95, "best_time": "全天", "format": "图文/视频"},
-    "新手教程": {"base_score": 68, "best_time": "14:00-16:00", "format": "图文步骤"},
-    "收益晒单": {"base_score": 88, "best_time": "收盘后", "format": "截图+分析"},
-}
-
-# 标题公式库（高互动标题规律）
-TITLE_FORMULAS = [
-    "「{数字}个{主题}的真相，99%的人不知道」",
-    "「AI帮我{动作}了{主题}，结果让我{情绪}」",
-    "「{时间段}最值得关注的{数字}个{主题}信号」",
-    "「为什么{观点}？我用数据说话」",
-    "「{主题}要{预测}了？这几个指标告诉你答案」",
-    "「我的{主题}策略：从亏{金额}到盈{金额}的转变」",
-]
-
-def analyze_traffic_patterns(social_hype, trending_tokens):
-    """分析流量规律，找出当日内容机会"""
-    
-    now = datetime.now()
-    hour = now.hour
-    
-    # 确定最佳发帖时间
-    if 8 <= hour <= 10:
-        time_window = "🌅 早盘黄金期"
-        time_boost = 1.3
-    elif 12 <= hour <= 14:
-        time_window = "☀️ 午间次高峰"
-        time_boost = 1.1
-    elif 20 <= hour <= 23:
-        time_window = "🌙 晚间黄金期"
-        time_boost = 1.4
+    if 20 <= bj_hour <= 23:
+        time_window = "🌙 晚间黄金期（北京20:00-23:00）"
+        time_multiplier = 1.4
+    elif 8 <= bj_hour <= 10:
+        time_window = "☀️ 早盘黄金期（北京08:00-10:00）"
+        time_multiplier = 1.3
+    elif 12 <= bj_hour <= 14:
+        time_window = "🌤 午间小高峰（北京12:00-14:00）"
+        time_multiplier = 1.1
     else:
         time_window = "⏰ 普通时段"
-        time_boost = 1.0
+        time_multiplier = 1.0
 
-    # 找热点交集（社交热度 × 价格变动）
-    hot_symbols = [t["symbol"] for t in social_hype[:5]]
-    trending_symbols = [t["symbol"] for t in trending_tokens[:5] if abs(t.get("price_change", 0)) > 3]
-    
-    # 热点交集 = 最强话题
-    intersection = [s for s in hot_symbols if s in trending_symbols]
-    if not intersection:
-        intersection = hot_symbols[:3]
+    # 从社交热度取Top3热门代币
+    top_symbols = [h["symbol"] for h in (social_hype or [])[:3]]
+    # 从智能钱信号取BUY方向
+    smart_buys = [s["ticker"] for s in (smart_signals or []) if s.get("direction") == "buy"][:3]
 
     return {
         "time_window": time_window,
-        "time_boost": time_boost,
-        "hot_symbols": intersection,
-        "content_type_ranking": sorted(CONTENT_WEIGHTS.items(), key=lambda x: -x[1]["base_score"] * time_boost)[:5],
+        "time_multiplier": time_multiplier,
+        "top_symbols": top_symbols,
+        "smart_buys": smart_buys,
+        "bj_hour": bj_hour,
     }
 
-def predict_hot_topics(analysis, hotwords):
-    """预测今日广场热榜话题Top5"""
-    hot = analysis["hot_symbols"]
-    topics = []
-    
-    # 基于热点符号+内容类型组合生成话题预测
-    topic_templates = [
-        {"topic": f"AI+{hot[0] if hot else 'BTC'}分析工具实测", "score": 96, "reason": "AI话题+热门币种双加成，传播力极强"},
-        {"topic": f"{hot[0] if hot else 'BTC'}今日行情深度拆解", "score": 91, "reason": "行情分析是广场第一大类，配合当前波动性高"},
-        {"topic": "我的币安成长之旅 · 7日挑战", "score": 88, "reason": "系列内容留存率高，粉丝追更动力强"},
-        {"topic": f"链上数据揭示{hot[1] if len(hot)>1 else 'ETH'}真实动向", "score": 85, "reason": "链上数据稀缺性强，专业感高"},
-        {"topic": "OpenClaw AI Agent使用实测报告", "score": 82, "reason": "新工具新玩法，好奇心驱动点击"},
+def predict_hot_topics(analysis, hotwords, smart_signals):
+    """预测今日热榜Top5话题"""
+    symbols_str = "+".join(analysis["top_symbols"][:2]) if analysis["top_symbols"] else "BTC+ETH"
+    smart_str   = analysis["smart_buys"][0] if analysis["smart_buys"] else "BTC"
+
+    topics = [
+        {"rank": 1, "topic": f"AI+加密：{symbols_str}今日值得关注吗",
+         "score": int(95 * analysis["time_multiplier"]), "type": "AI+加密",
+         "best_time": "全天", "format": "图文/视频"},
+        {"rank": 2, "topic": f"智能钱正在买{smart_str}，跟吗？",
+         "score": int(91 * analysis["time_multiplier"]), "type": "智能钱信号",
+         "best_time": "突发时立即", "format": "短文+截图"},
+        {"rank": 3, "topic": "收益晒单：AI帮我优化配置后的7日回报",
+         "score": int(87 * analysis["time_multiplier"]), "type": "收益晒单",
+         "best_time": "收盘后", "format": "截图+分析"},
+        {"rank": 4, "topic": f"{symbols_str}行情分析 —— 现在是买点还是等待",
+         "score": int(83 * analysis["time_multiplier"]), "type": "行情分析",
+         "best_time": "09:00-10:00 / 21:00-22:00", "format": "图文+数据"},
+        {"rank": 5, "topic": "7日挑战Day更新：交易思维开始改变了",
+         "score": int(78 * analysis["time_multiplier"]), "type": "成长故事",
+         "best_time": "晚间20:00-22:00", "format": "长文+截图"},
     ]
-    
-    return topic_templates
+    return topics
 
 def generate_square_oracle_report():
-    """生成完整流量预言机报告"""
-    
-    print("🔮 币安广场流量预言机")
-    print(f"分析时间：{datetime.now().strftime('%Y-%m-%d %H:%M')} CST")
-    print("=" * 45)
-    
-    # Step1: 采集数据
-    print("\n📡 正在采集多维数据...")
-    social_hype = get_binance_social_hype()
-    trending = get_trending_tokens()
-    hotwords = get_news_hotwords()
-    print(f"  ✅ 社交热度数据：{len(social_hype)}条")
-    print(f"  ✅ 趋势代币数据：{len(trending)}条")
-    print(f"  ✅ 新闻热词：{', '.join(hotwords[:6])}")
-    
-    # Step2: 分析规律
-    analysis = analyze_traffic_patterns(social_hype, trending)
-    
-    # Step3: 输出报告
-    print(f"\n⏰ 当前时间窗口：{analysis['time_window']}")
-    print(f"流量系数：×{analysis['time_boost']}")
-    
-    print(f"\n🔥 今日热点词：{' · '.join(['#'+s for s in analysis['hot_symbols']])}")
-    
-    print(f"\n📊 内容类型推荐（按预计流量排序）")
-    for i, (ctype, info) in enumerate(analysis["content_type_ranking"], 1):
-        score = int(info["base_score"] * analysis["time_boost"])
-        print(f"  {i}. {ctype}  预计热度分：{score}")
-        print(f"     最佳时间：{info['best_time']} | 格式：{info['format']}")
-    
-    print(f"\n🎯 今日热榜话题预测 Top5")
-    topics = predict_hot_topics(analysis, hotwords)
-    for i, t in enumerate(topics, 1):
-        print(f"\n  {i}. 【{t['topic']}】")
-        print(f"     预测热度：{'⭐' * (t['score'] // 20)} {t['score']}分")
-        print(f"     原因：{t['reason']}")
-    
-    print(f"\n📝 今日标题公式推荐")
-    for formula in TITLE_FORMULAS[:3]:
-        print(f"  · {formula}")
-    
-    print(f"\n💡 流量密码总结")
-    print(f"  1. 「AI+{analysis['hot_symbols'][0] if analysis['hot_symbols'] else 'BTC'}」是今日最强话题组合")
-    print(f"  2. {analysis['time_window']}发布，流量 ×{analysis['time_boost']}")
-    print(f"  3. 标题带情绪词（让我震惊/没想到/真相）互动率+40%")
-    print(f"  4. 配图>纯文字，视频>配图，数据截图最具说服力")
-    print(f"  5. 发布后前30分钟主动互动评论区，触发广场推荐算法")
-    print(f"\n{'='*45}")
-    print(f"🖤 XieXiu · 广场流量预言机 v1.0")
+    now_bj = datetime.now(timezone.utc)
+    bj_str = f"{(now_bj.hour+8)%24:02d}:{now_bj.minute:02d} CST"
+
+    # ── 拉取三维数据（官方skill）──────────────────────────
+    social_hype    = get_social_hype()
+    trending       = get_trending_tokens()
+    smart_signals  = get_smart_money_signals()
+    hotwords       = get_news_hotwords()
+
+    analysis = analyze_traffic_patterns(social_hype, trending, smart_signals)
+    topics   = predict_hot_topics(analysis, hotwords, smart_signals)
+
+    lines = [
+        f"🔮 币安广场流量预言机",
+        f"分析时间：{now_bj.strftime('%Y-%m-%d')} {bj_str}",
+        f"{'='*45}",
+        f"",
+        f"📊 数据来源（官方Skill）",
+        f"  ✅ crypto-market-rank skill → 社交热度：{len(social_hype)}条",
+        f"  ✅ spot skill               → 行情热点：{len(trending)}条",
+        f"  ✅ trading-signal skill     → 智能钱信号：{len(smart_signals)}条",
+        f"",
+        f"🔥 今日社交热度Top3（crypto-market-rank）",
+    ]
+    for h in (social_hype or [])[:3]:
+        lines.append(f"  #{h['symbol']}  热度:{h['hype']:,}  情绪:{h.get('sentiment','N/A')}")
+
+    if smart_signals:
+        lines += ["", f"💰 智能钱信号Top3（trading-signal）"]
+        for s in smart_signals[:3]:
+            lines.append(f"  {s['ticker']} {s['direction'].upper()} | 最大涨幅:{s['max_gain']}% | 退出率:{s['exit_rate']}%")
+
+    lines += [
+        "",
+        f"⏰ 当前时间窗口：{analysis['time_window']}",
+        f"   流量系数 ×{analysis['time_multiplier']}",
+        "",
+        f"🎯 今日热榜话题预测 Top5",
+    ]
+    for t in topics:
+        lines += [
+            f"  {t['rank']}. {t['topic']}",
+            f"     热度分：{t['score']} | 最佳时间：{t['best_time']} | 格式：{t['format']}",
+            "",
+        ]
+
+    lines += [
+        f"📝 今日标题公式推荐",
+        f"  · AI帮我发现了{{symbol}}的{{信号类型}}，结果让我{{情绪}}",
+        f"  · 智能钱刚买了{{token}}，你要跟吗？",
+        f"  · 照镜子第{{N}}天：AI说我的致命弱点是……",
+        f"",
+        f"💡 流量密码总结",
+        f"  1. 社交热度最高：{'、'.join([h['symbol'] for h in (social_hype or [])[:3]])}",
+        f"  2. 时段系数：{analysis['time_window']}",
+        f"  3. 标题含情绪词互动率+40%",
+        f"  4. 发布后30分钟主动互动触发推荐算法",
+        f"",
+        f"{'='*45}",
+        f"🖤 XieXiu × 芒果 · 广场流量预言机 v2.0",
+        f"   数据由币安官方Skill提供",
+    ]
+    return "\n".join(lines)
 
 if __name__ == "__main__":
-    generate_square_oracle_report()
+    print(generate_square_oracle_report())

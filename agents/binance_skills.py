@@ -206,7 +206,92 @@ def skill_get_top_movers(limit=10):
     except Exception as e:
         return None, str(e)
 
-# ─── 状态检查 ────────────────────────────────────────────
+# ─── SKILL 6: crypto-market-rank → 社交热度榜 ────────────
+
+def skill_get_social_hype(chain_id="56", limit=10):
+    """
+    调用 crypto-market-rank skill
+    接口: GET social/hype/rank/leaderboard
+    文档: crypto-market-rank/SKILL.md - API 1
+    无需API Key（公开接口）
+    """
+    try:
+        url = (f"https://web3.binance.com/bapi/defi/v1/public/wallet-direct/"
+               f"buw/wallet/market/token/pulse/social/hype/rank/leaderboard"
+               f"?chainId={chain_id}&sentiment=All&socialLanguage=ALL&targetLanguage=en&timeRange=1")
+        req = urllib.request.Request(url, headers={"Accept-Encoding": "identity", "User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            d = json.loads(r.read())
+        items = d.get("data", {}).get("leaderBoardList", [])[:limit]
+        return [{"symbol":    i["metaInfo"]["symbol"],
+                 "hype":      i["socialHypeInfo"]["socialHype"],
+                 "sentiment": i["socialHypeInfo"]["sentiment"],
+                 "summary":   i["socialHypeInfo"].get("socialSummaryBriefTranslated", ""),
+                 "price_change": i.get("marketInfo", {}).get("priceChange", 0),
+                 "source":    "crypto-market-rank/social-hype"} for i in items], "ok"
+    except Exception as e:
+        return None, str(e)
+
+# ─── SKILL 7: crypto-market-rank → 趋势代币排行 ──────────
+
+def skill_get_trending_tokens(rank_type=10, chain_id="56", limit=8):
+    """
+    调用 crypto-market-rank skill
+    接口: POST unified/rank/list
+    rankType: 10=Trending 11=TopSearch 20=Alpha 40=Stock
+    文档: crypto-market-rank/SKILL.md - API 2
+    无需API Key（公开接口）
+    """
+    try:
+        url = ("https://web3.binance.com/bapi/defi/v1/public/wallet-direct/"
+               "buw/wallet/market/token/pulse/unified/rank/list")
+        body = json.dumps({"rankType": rank_type, "chainId": chain_id,
+                           "page": 1, "size": limit}).encode()
+        req = urllib.request.Request(url, data=body,
+                                     headers={"Content-Type": "application/json",
+                                              "Accept-Encoding": "identity"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            d = json.loads(r.read())
+        items = d.get("data", {}).get("list", [])[:limit]
+        return [{"symbol":      i.get("symbol", ""),
+                 "price_change": i.get("priceChange24h", 0),
+                 "volume":      i.get("volume24h", 0),
+                 "rank_type":   rank_type,
+                 "source":      "crypto-market-rank/unified-rank"} for i in items], "ok"
+    except Exception as e:
+        return None, str(e)
+
+# ─── SKILL 8: trading-signal → 智能钱信号 ────────────────
+
+def skill_get_smart_money_signals(chain_id="56", limit=5):
+    """
+    调用 trading-signal skill
+    接口: POST signal/smart-money
+    文档: trading-signal/SKILL.md
+    无需API Key（公开接口）
+    """
+    try:
+        url = ("https://web3.binance.com/bapi/defi/v1/public/wallet-direct/"
+               "buw/wallet/web/signal/smart-money")
+        body = json.dumps({"smartSignalType": "", "page": 1,
+                           "pageSize": limit, "chainId": chain_id}).encode()
+        req = urllib.request.Request(url, data=body,
+                                     headers={"Content-Type": "application/json",
+                                              "Accept-Encoding": "identity"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            d = json.loads(r.read())
+        items = d.get("data", [])[:limit]
+        return [{"ticker":    i.get("ticker", ""),
+                 "direction": i.get("direction", ""),
+                 "max_gain":  i.get("maxGain", "0"),
+                 "exit_rate": i.get("exitRate", 0),
+                 "status":    i.get("status", ""),
+                 "smart_count": i.get("smartMoneyCount", 0),
+                 "alert_price": i.get("alertPrice", "0"),
+                 "current_price": i.get("currentPrice", "0"),
+                 "source":    "trading-signal/smart-money"} for i in items], "ok"
+    except Exception as e:
+        return None, str(e)
 
 def check_skill_status():
     api_key, secret = load_keys()

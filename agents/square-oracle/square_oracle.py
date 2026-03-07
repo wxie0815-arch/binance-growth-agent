@@ -40,6 +40,48 @@ def get_smart_money_signals():
     signals, err = skill_get_smart_money_signals("56", limit=5)
     return signals or []
 
+def get_square_trending_posts(pages=2):
+    """binance-square-monitor skill - 广场实时热帖数据（L0层）"""
+    try:
+        sys.path.insert(0, os.path.join(BASE, "skills/binance-square-monitor/scripts"))
+        from binance_square_monitor import fetch_all_trending
+        posts = fetch_all_trending(total_pages=pages, page_size=20)
+        if not posts:
+            return []
+        # 取top10，按浏览量排序
+        posts.sort(key=lambda x: x["view_count"], reverse=True)
+        return posts[:10]
+    except Exception as e:
+        return []
+
+def extract_square_signals(posts):
+    """从广场热帖中提取话题信号：高互动率帖子 + 热门hashtag"""
+    if not posts:
+        return {"hot_hashtags": [], "high_engagement": [], "viral_posts": []}
+
+    hashtag_count = {}
+    for p in posts:
+        for tag in p.get("hashtags", []):
+            hashtag_count[tag] = hashtag_count.get(tag, 0) + 1
+
+    hot_tags = sorted(hashtag_count.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    # 互动率 = (likes + comments + shares) / views
+    for p in posts:
+        views = p["view_count"] or 1
+        p["engagement_rate"] = (p["like_count"] + p["comment_count"] + p["share_count"]) / views
+
+    high_eng = sorted(posts, key=lambda x: x["engagement_rate"], reverse=True)[:3]
+    viral = [p for p in posts if p["view_count"] > 10000][:3]
+
+    return {
+        "hot_hashtags": [t[0] for t in hot_tags],
+        "high_engagement": [{"author": p["author"], "rate": round(p["engagement_rate"]*100, 2),
+                              "summary": p["summary"][:40]} for p in high_eng],
+        "viral_posts": [{"author": p["author"], "views": p["view_count"],
+                         "summary": p["summary"][:40]} for p in viral],
+    }
+
 def get_news_hotwords(token=None):
     """opennews - 新闻热词（需OPENNEWS_TOKEN）"""
     token = token or os.environ.get("OPENNEWS_TOKEN")
@@ -125,6 +167,9 @@ def generate_square_oracle_report():
     trending       = get_trending_tokens()
     smart_signals  = get_smart_money_signals()
     hotwords       = get_news_hotwords()
+    # L0层：广场实时热帖（binance-square-monitor skill）
+    square_posts   = get_square_trending_posts(pages=2)
+    square_signals = extract_square_signals(square_posts)
 
     analysis = analyze_traffic_patterns(social_hype, trending, smart_signals)
     topics   = predict_hot_topics(analysis, hotwords, smart_signals)
@@ -134,11 +179,27 @@ def generate_square_oracle_report():
         f"分析时间：{now_bj.strftime('%Y-%m-%d')} {bj_str}",
         f"{'='*45}",
         f"",
-        f"📊 数据来源（官方Skill）",
+        f"📊 数据来源",
+        f"  ✅ binance-square-monitor → 广场热帖：{len(square_posts)}条（实时）",
         f"  ✅ crypto-market-rank skill → 社交热度：{len(social_hype)}条",
         f"  ✅ spot skill               → 行情热点：{len(trending)}条",
         f"  ✅ trading-signal skill     → 智能钱信号：{len(smart_signals)}条",
         f"",
+    ]
+
+    # 广场实时热帖信号
+    if square_posts:
+        lines += [f"📡 广场热帖实时数据（L0层）"]
+        for p in square_posts[:3]:
+            lines.append(f"  👤 {p['author']} | 👁{p['view_count']:,} ❤{p['like_count']} 💬{p['comment_count']} | {p['summary'][:35]}...")
+        if square_signals["hot_hashtags"]:
+            lines.append(f"  🏷 热门标签：{'  '.join(['#'+t for t in square_signals['hot_hashtags'][:4]])}")
+        if square_signals["high_engagement"]:
+            top = square_signals["high_engagement"][0]
+            lines.append(f"  🔥 互动率最高：{top['author']}（{top['rate']}%）")
+        lines.append("")
+
+    lines += [
         f"🔥 今日社交热度Top3（crypto-market-rank）",
     ]
     for h in (social_hype or [])[:3]:

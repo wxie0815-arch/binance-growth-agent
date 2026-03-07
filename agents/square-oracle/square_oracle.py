@@ -182,11 +182,16 @@ def generate_square_oracle_report():
     return "\n".join(lines)
 
 def generate_enhanced_report():
-    """组合官方skill + 6551增强数据，输出完整报告"""
-    # Step1: 官方skill报告（不变）
+    """
+    三层数据融合输出：
+    Layer1: 官方Skill（crypto-market-rank / spot / trading-signal）
+    Layer2: 6551增强（opennews + Twitter KOL）
+    Layer3: 广场热点信号（@binancezh推文 + 话题分类）
+    """
+    # Layer1: 官方skill报告（不变）
     base_report = generate_square_oracle_report()
 
-    # Step2: 获取BTC涨跌幅（已从官方skill拿到）
+    # 获取BTC涨跌幅（驱动情绪判断）
     try:
         from binance_skills import skill_get_top_movers
         movers, _ = skill_get_top_movers(10)
@@ -194,7 +199,7 @@ def generate_enhanced_report():
     except:
         btc_change = None
 
-    # Step3: 6551增强层
+    # Layer2: 6551增强层（opennews + KOL）
     try:
         from data_6551 import build_enhancement_report, format_enhancement_block
         enh_data = build_enhancement_report(btc_change=btc_change)
@@ -202,7 +207,21 @@ def generate_enhanced_report():
     except Exception as e:
         enh_block = f"\n[6551增强层暂不可用: {e}]\n"
 
-    return base_report + "\n" + enh_block
+    # Layer3: 广场热点信号（@binancezh + opennews话题分类）
+    try:
+        from square_signals import build_square_signal_report, format_square_block
+        sq_data = build_square_signal_report()
+        sq_block = format_square_block(sq_data)
+
+        # 把广场Top话题融入今日选题建议
+        if sq_data.get("topics"):
+            top_topic = sq_data["topics"][0]["topic"]
+            top_tags = " ".join([f"#{t}" for t, _ in sq_data.get("hashtags", [])[:3]])
+            sq_block += f"\n🎯 今日最优选题组合：「{top_topic}」× BTC行情  标签：{top_tags}\n"
+    except Exception as e:
+        sq_block = f"\n[广场热点层暂不可用: {e}]\n"
+
+    return base_report + "\n" + enh_block + "\n" + sq_block
 
 
 if __name__ == "__main__":

@@ -120,7 +120,17 @@ MIT License · 参赛作品，欢迎 Fork & Star ⭐
 
 ## 📹 演示视频
 
-> 🎬 演示视频录制中，展示完整5步流程 + 双Agent实时协作（北京时间3月8日前上传）
+[![演示视频](https://img.shields.io/badge/▶_演示视频-哔哩哔哩-00A1D6)](https://github.com/wxie0815-arch/binance-growth-agent)
+
+**系统实际运行输出（Demo模式）：**
+```
+🦞 我的币安人生 | Powered by OpenClaw
+🪞 交易者人格：🚀 进取型（胜率50%，惯用杠杆12x）
+🗺️ 收益地图：闲置1000U → 年化+106 USDT优化方案
+📊 合约复盘：本周5笔，识别3个高频错误
+🎓 苏格拉底训练：针对过度杠杆专项训练
+📅 Day1广场内容：自动生成并带 #AIBinance 标签
+```
 
 ## 🏆 参赛信息
 

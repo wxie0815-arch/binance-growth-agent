@@ -107,8 +107,8 @@ def analyze_futures(trades):
         return {}
     
     total_pnl = sum(t['pnl'] for t in trades)
-    avg_leverage = sum(t['leverage'] for t in trades) / len(trades)
-    max_leverage = max(t['leverage'] for t in trades)
+    avg_leverage = sum(t.get('leverage', 1) for t in trades) / len(trades)
+    max_leverage = max(t.get('leverage', 1) for t in trades)
     loss_trades = [t for t in trades if t['pnl'] < 0]
     
     return {

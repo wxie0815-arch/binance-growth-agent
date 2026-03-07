@@ -185,6 +185,7 @@ def generate_square_oracle_report():
 def humanize_content(text):
     """
     去AI味处理（humanizer-cn规则）
+    同时处理代币格式：BTC → $BTC（广场规范，前后加空格）
     调用 skill: /home/ubuntu/.openclaw/workspace/skills/humanizer-cn/SKILL.md
     """
     import re
@@ -208,9 +209,17 @@ def humanize_content(text):
     result = text
     for old, new in replacements.items():
         result = result.replace(old, new)
-    # 去掉连续空白行超过2行
+
+    # 代币格式标准化：裸BTC/ETH等 → $BTC $ETH（广场规范）
+    # 避免重复处理已有 $ 前缀的
+    TOKENS = ["BTC", "ETH", "BNB", "SOL", "XRP", "DOGE", "ADA", "AVAX", "DOT", "MATIC"]
+    for token in TOKENS:
+        text = re.sub(rf'(?<!\$)(?<![A-Z]){re.escape(token)}(?![A-Z])', f' ${token} ', text)
+
+    # 清理多余空格
+    result = re.sub(r'  +', ' ', text)
     result = re.sub(r'\n{3,}', '\n\n', result)
-    return result
+    return result.strip()
 
 
 def generate_enhanced_report():

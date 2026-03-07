@@ -181,5 +181,33 @@ def generate_square_oracle_report():
     ]
     return "\n".join(lines)
 
+def generate_enhanced_report():
+    """组合官方skill + 6551增强数据，输出完整报告"""
+    # Step1: 官方skill报告（不变）
+    base_report = generate_square_oracle_report()
+
+    # Step2: 获取BTC涨跌幅（已从官方skill拿到）
+    try:
+        from binance_skills import skill_get_top_movers
+        movers, _ = skill_get_top_movers(10)
+        btc_change = next((m["change_pct"] for m in (movers or []) if "BTC" in m["symbol"]), None)
+    except:
+        btc_change = None
+
+    # Step3: 6551增强层
+    try:
+        from data_6551 import build_enhancement_report, format_enhancement_block
+        enh_data = build_enhancement_report(btc_change=btc_change)
+        enh_block = format_enhancement_block(enh_data)
+    except Exception as e:
+        enh_block = f"\n[6551增强层暂不可用: {e}]\n"
+
+    return base_report + "\n" + enh_block
+
+
 if __name__ == "__main__":
-    print(generate_square_oracle_report())
+    import sys
+    if "--enhanced" in sys.argv:
+        print(generate_enhanced_report())
+    else:
+        print(generate_square_oracle_report())
